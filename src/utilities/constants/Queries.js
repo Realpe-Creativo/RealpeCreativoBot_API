@@ -17,7 +17,7 @@ const Queries = Object.freeze({
                            email, celular, tipo_usuario, activo)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING id, nombres, apellidos, tipo_documento, numero_documento, 
-                email, celular, tipo_usuario, fecha_creacion, fecha_actualizacion, activo
+                email, celular, tipo_usuario, creation_date, update_date, activo
     `,
     CLIENT_CREATE: `
         INSERT INTO clientes (usuario_id, nombre_acudiente, fecha_nacimiento, barrio, 

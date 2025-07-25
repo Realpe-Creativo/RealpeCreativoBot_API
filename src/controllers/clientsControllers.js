@@ -19,8 +19,9 @@ export class ClienteController {
         }
 
         try {
+            console.log('Va a consultar cliente...');
             const client = await ClientService.getClientByDocument(req.body);
-
+            console.log('Ok...');
             if (client == null) {
                 return res.status(404).json({
                     code_response: CodeResponse.CODE_FAILED,
@@ -77,7 +78,7 @@ export class ClienteController {
                 });
             }
 
-            const client = await ClientService.createCliente(req.body);
+            const client = await ClientService.createClient(req.body);
 
             if (client == null) {
                 return res.status(401).json({

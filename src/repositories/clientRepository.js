@@ -3,9 +3,14 @@ import Queries from "../utilities/constants/Queries.js";
 
 export class ClientRepository {
 
-    static async findById(clientData) {
-        const result = await pool.query(Queries.CLIENT_FIND_BY_DOCUMENT,
-            [ clientData.document_type, clientData.document_number ]);
+    static async findById(clientData, clientBD) {
+        console.log("Se recibe info : " + clientData.document_type + " - " + clientData.document_number);
+        const values = [
+            clientData.document_type,
+            clientData.document_number
+        ]
+        const executor = clientBD || pool;
+        const result = await executor.query(Queries.CLIENT_FIND_BY_DOCUMENT, values);
         return result.rows[0] || null;
     }
 

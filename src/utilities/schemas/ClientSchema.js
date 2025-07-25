@@ -17,7 +17,7 @@ const ClientSchema = Object.freeze({
         document_number: Joi.string().max(20).required(),
         email: Joi.string().max(255).email().required(),
         cellphone_number: Joi.string().max(15).required(),
-        guardian_name: Joi.string().max(15).required(),
+        guardian_name: Joi.string().max(200).required(),
         date_of_birth: Joi.string()
             .pattern(dateRegex)
             .required()

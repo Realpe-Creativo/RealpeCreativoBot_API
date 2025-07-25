@@ -4,19 +4,21 @@ import { pool } from "../db/connection.js";
 
 export class ClientService {
 
-    static async getClienteById(id) {
-        const cliente = await Client.findById(id)
-        if (!cliente) {
-            throw new Error("Client not found");
-        }
-        return cliente;
-    }
+    // static async getClienteById(id) {
+    //     const cliente = await Client.findById(id)
+    //     if (!cliente) {
+    //         throw new Error("Client not found");
+    //     }
+    //     return cliente;
+    // }
 
     static async getClientByDocument(clientData) {
-        return await User.findByDocument(clientData);
+        console.log('Ok...');
+        const clientBD = await pool.connect();
+        return await UserRepository.findByDocument(clientData, clientBD);
     }
 
-    static async createCliente(clientData) {
+    static async createClient(clientData) {
         console.log('Ok...');
         const clientBD = await pool.connect();
 
@@ -24,7 +26,7 @@ export class ClientService {
             await clientBD.query("BEGIN");
 
             // Create usuario first
-            const usuario = await User.create({
+            const usuario = await UserRepository.create({
                 nombres: clientData.names,
                 apellidos: clientData.last_names,
                 tipo_documento: clientData.document_type,
@@ -38,7 +40,7 @@ export class ClientService {
             console.log("User creado : " + usuario.toString());
 
             // Create cliente
-            const cliente = await Client.create({
+            const cliente = await ClientRepository.create({
                 usuario_id: usuario.id,
                 nombre_acudiente: clientData.guardian_name,
                 fecha_nacimiento: clientData.date_of_birth,
@@ -50,8 +52,20 @@ export class ClientService {
 
             console.log("Client creado : " + cliente.toString());
 
+            console.log("Se va a consultar con info : " + clientData.document_type + " - " + clientData.document_number);
+
+            // Obtiene usuario-cliente
+            const clienteDetalle = await ClientRepository.findById({
+                document_type: clientData.document_type,
+                document_number: clientData.document_number
+            }, clientBD);
+
+            if (clienteDetalle == null) {
+                throw new Error("Ocurrio un error creando el cliente.");
+            }
+
             await clientBD.query("COMMIT");
-            return await Client.findById(cliente.id);
+            return clienteDetalle;
         } catch (error) {
             console.log("Ocurrio un error : " + error);
             await clientBD.query("ROLLBACK");
@@ -61,23 +75,23 @@ export class ClientService {
         }
     }
 
-    static async updateCliente(id, clienteData) {
-        const cliente = await Client.update(id, clienteData)
-        if (!cliente) {
-            throw new Error("Client not found")
-        }
-        return await Client.findById(id)
-    }
-
-    static async deleteCliente(id) {
-        const cliente = await Client.findById(id)
-        if (!cliente) {
-            throw new Error("Client not found")
-        }
-
-        // Soft delete the associated usuario
-        await User.softDelete(cliente.usuario_id)
-
-        return { message: "Client deleted successfully" }
-    }
+    // static async updateCliente(id, clienteData) {
+    //     const cliente = await Client.update(id, clienteData)
+    //     if (!cliente) {
+    //         throw new Error("Client not found")
+    //     }
+    //     return await Client.findById(id)
+    // }
+    //
+    // static async deleteCliente(id) {
+    //     const cliente = await Client.findById(id)
+    //     if (!cliente) {
+    //         throw new Error("Client not found")
+    //     }
+    //
+    //     // Soft delete the associated usuario
+    //     await User.softDelete(cliente.usuario_id)
+    //
+    //     return { message: "Client deleted successfully" }
+    // }
 }

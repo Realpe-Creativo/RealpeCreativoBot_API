@@ -3,6 +3,9 @@ import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import morgan from "morgan";
+import fs from "fs";
+import path from "path";
+
 import { notFound } from "./middleware/notFound.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
@@ -55,8 +58,6 @@ app.use(express.urlencoded({ extended: true }));
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 } else {
-    const fs = require('fs');
-    const path = require('path');
     const accessLogStream = fs.createWriteStream(
         path.join(__dirname, 'access.log'),
         { flags: 'a' }

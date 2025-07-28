@@ -1,15 +1,8 @@
 const notFound = (req, res, next) => {
-  const error = new Error(`Ruta no encontrada - ${req.originalUrl}`);
+  const error = new Error(`Route not found - ${req.originalUrl}`);
   res.status(404).json({
     success: false,
-    message: error.message,
-    availableEndpoints: {
-      api: '/api',
-      users: '/api/users',
-      products: '/api/products',
-      health: '/health',
-      docs: '/api/docs'
-    }
+    message: error.message
   });
 };
 

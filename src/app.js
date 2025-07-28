@@ -8,6 +8,7 @@ import { errorHandler } from "./middleware/errorHandler.js";
 
 import authRoutes from "./routes/authRoutes.js";
 import clientsRoutes from "./routes/clientsRoutes.js";
+import professionalsRoutes from "./routes/professionalsRoutes.js";
 
 const app = express();
 
@@ -75,6 +76,7 @@ app.get("/health", (req, res) => {
 // API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/clients", clientsRoutes);
+app.use("/api/professionals", professionalsRoutes);
 // app.use("/api/usuarios", usuariosRoutes);
 
 // app.use("/api/profesionales", profesionalesRoutes);

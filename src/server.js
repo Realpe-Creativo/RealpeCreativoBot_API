@@ -7,6 +7,8 @@ import app from "./app.js";
 // Load environment variables
 dotenv.config();
 
+const PROTOCOL = process.env.PROTOCOL || "http";
+const HOST = process.env.HOST || "localhost";
 const PORT = process.env.PORT || 3000;
 
 // Start server

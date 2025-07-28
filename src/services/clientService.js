@@ -4,16 +4,7 @@ import { pool } from "../db/connection.js";
 
 export class ClientService {
 
-    // static async getClienteById(id) {
-    //     const cliente = await Client.findById(id)
-    //     if (!cliente) {
-    //         throw new Error("Client not found");
-    //     }
-    //     return cliente;
-    // }
-
     static async getClientByDocument(clientData) {
-        console.log('Ok...');
         const clientBD = await pool.connect();
         return await UserRepository.findByDocument(clientData, clientBD);
     }

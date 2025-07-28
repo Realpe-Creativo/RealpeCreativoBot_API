@@ -36,6 +36,27 @@ const Queries = Object.freeze({
             AND us.activo = true
             AND cl.usuario_id = us.id
     `,
+    PROFESSIONAL_BY_ID: `
+        SELECT us.id, us.nombres, us.apellidos, us.tipo_documento,
+             us.email, us.celular, pr.cargo, pr.numero_whatsapp,
+             pr.activo
+            FROM usuarios us, profesionales pr
+            WHERE pr.id = $1
+            AND pr.usuario_id = us.id
+            AND pr.activo = true;
+    `,
+    PROFESSIONAL_BY_FILTERS: `
+        SELECT us.id, us.nombres, us.apellidos, us.tipo_documento,
+             us.email, us.celular, pr.cargo, pr.numero_whatsapp,
+             pr.activo
+            FROM usuarios us, profesionales pr
+            WHERE pr.id = $1
+            AND pr.numero_whatsapp = $2
+            AND pr.cargo = $3
+            AND pr.activo = true
+            AND us.id = pr.usuario_id
+            ;
+    `,
 });
 
 export default Queries;

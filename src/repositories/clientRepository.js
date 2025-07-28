@@ -4,7 +4,6 @@ import Queries from "../utilities/constants/Queries.js";
 export class ClientRepository {
 
     static async findById(clientData, clientBD) {
-        console.log("Se recibe info : " + clientData.document_type + " - " + clientData.document_number);
         const values = [
             clientData.document_type,
             clientData.document_number

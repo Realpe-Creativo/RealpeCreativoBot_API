@@ -3,7 +3,7 @@ import { UserService } from "../services/userService.js";
 import ClientSchema from "../utilities/schemas/ClientSchema.js";
 import CodeResponse from "../utilities/constants/CodeResponse.js";
 
-export class ClienteController {
+export class ClientsController {
 
     static async getClientByDocument(req, res) {
         console.log(req.body); // Crear tabla de logs
@@ -19,9 +19,8 @@ export class ClienteController {
         }
 
         try {
-            console.log('Va a consultar cliente...');
             const client = await ClientService.getClientByDocument(req.body);
-            console.log('Ok...');
+
             if (client == null) {
                 return res.status(404).json({
                     code_response: CodeResponse.CODE_FAILED,

@@ -57,6 +57,27 @@ const Queries = Object.freeze({
             AND us.id = pr.usuario_id
             ;
     `,
+    CHAT_STATUS_BY_NUMBER: `
+        SELECT ec.id, ec.numero_whatsapp, ec.estado_conversacion
+        FROM estado_chat ec
+        WHERE ec.numero_whatsapp = $1;
+    `,
+    CHAT_STATUS_EXISTS: `
+        SELECT EXISTS (
+            SELECT 1 FROM estado_chat ec WHERE ec.numero_whatsapp = $1
+        ) AS exists
+    `,
+    CHAT_STATUS_CREATE: `
+        INSERT INTO estado_chat (numero_whatsapp, estado_conversacion)
+            VALUES ($1, $2)
+        RETURNING *
+    `,
+    CHAT_STATUS_UDPATE: `
+        UPDATE estado_chat
+           SET estado_conversacion = $2
+         WHERE id = $1
+        RETURNING *
+    `,
 });
 
 export default Queries;

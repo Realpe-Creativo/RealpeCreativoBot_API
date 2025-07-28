@@ -9,6 +9,7 @@ import { errorHandler } from "./middleware/errorHandler.js";
 import authRoutes from "./routes/authRoutes.js";
 import clientsRoutes from "./routes/clientsRoutes.js";
 import professionalsRoutes from "./routes/professionalsRoutes.js";
+import chatStatusRoutes from "./routes/chatStatusRoutes.js";
 
 const app = express();
 
@@ -77,13 +78,7 @@ app.get("/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/clients", clientsRoutes);
 app.use("/api/professionals", professionalsRoutes);
-// app.use("/api/usuarios", usuariosRoutes);
-
-// app.use("/api/profesionales", profesionalesRoutes);
-// app.use("/api/productos", productosRoutes);
-// app.use("/api/citas", citasRoutes);
-// app.use("/api/estado-chat", estadoChatRoutes);
-// app.use("/api/estado-cita", estadoCitaRoutes);
+app.use("/api/chat-status", chatStatusRoutes);
 
 // Error handling middleware
 app.use(notFound);

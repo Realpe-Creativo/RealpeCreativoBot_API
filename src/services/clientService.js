@@ -10,7 +10,6 @@ export class ClientService {
     }
 
     static async createClient(clientData) {
-        console.log('Ok...');
         const clientBD = await pool.connect();
 
         try {
@@ -28,8 +27,6 @@ export class ClientService {
                 activo: true
             }, clientBD);
 
-            console.log("User creado : " + usuario.toString());
-
             // Create cliente
             const cliente = await ClientRepository.create({
                 usuario_id: usuario.id,
@@ -40,10 +37,6 @@ export class ClientService {
                 remitido_institucion: clientData.sent_by_institution,
                 institucion_educativo: clientData.institution
             }, clientBD);
-
-            console.log("Client creado : " + cliente.toString());
-
-            console.log("Se va a consultar con info : " + clientData.document_type + " - " + clientData.document_number);
 
             // Obtiene usuario-cliente
             const clienteDetalle = await ClientRepository.findById({
@@ -58,7 +51,6 @@ export class ClientService {
             await clientBD.query("COMMIT");
             return clienteDetalle;
         } catch (error) {
-            console.log("Ocurrio un error : " + error);
             await clientBD.query("ROLLBACK");
             throw error;
         } finally {

@@ -16,24 +16,28 @@ const startServer = async () => {
   try {
     await connectDB();
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT} in ${process.env.NODE_ENV} mode`)
-      console.log(`📊 Health check: http://localhost:${PORT}/health`)
+      console.log(`🚀 Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`📊 Health check: ${PROTOCOL}://${HOST}:${PORT}/health`);
+      } else {
+        console.log(`📊 Health check: ${PROTOCOL}://${HOST}/health`);
+      }
     });
   } catch (error) {
-    console.error("❌ Failed to start server:", error)
-    process.exit(1)
+    console.error("❌ Failed to start server:", error);
+    process.exit(1);
   }
 }
 
 // Graceful shutdown
 process.on("SIGTERM", () => {
-  console.log("👋 SIGTERM received, shutting down gracefully")
-  process.exit(0)
+  console.log("👋 SIGTERM received, shutting down gracefully");
+  process.exit(0);
 });
 
 process.on("SIGINT", () => {
-  console.log("👋 SIGINT received, shutting down gracefully")
-  process.exit(0)
+  console.log("👋 SIGINT received, shutting down gracefully");
+  process.exit(0);
 });
 
 startServer();

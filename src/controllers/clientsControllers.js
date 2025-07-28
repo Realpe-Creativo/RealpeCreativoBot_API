@@ -67,7 +67,6 @@ export class ClientsController {
                 document_number: req.body.document_number
             });
 
-            console.log("Ok 3...");
             if (userExists) {
                 return res.status(401).json({
                     code_response: CodeResponse.CODE_FAILED,

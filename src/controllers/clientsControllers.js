@@ -114,6 +114,14 @@ export class ClientsController {
                 })
             }
 
+            // Cambia formato de fecha
+            const dateBD = new Date(client.date_of_birth);
+            client["date_of_birth"] = dateBD.toLocaleDateString('es-CO', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+            });
+
             return res.status(201).json({
                 code_response: CodeResponse.CODE_SUCCESS,
                 message: "Client created successfully",

@@ -40,7 +40,6 @@ export class ClientService {
 
             // Obtiene usuario-cliente
             const clienteDetalle = await ClientRepository.findById({
-                document_type: clientData.document_type,
                 document_number: clientData.document_number
             }, clientBD);
 

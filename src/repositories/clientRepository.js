@@ -5,7 +5,6 @@ export class ClientRepository {
 
     static async findById(clientData, clientBD) {
         const values = [
-            clientData.document_type,
             clientData.document_number
         ]
         const executor = clientBD || pool;

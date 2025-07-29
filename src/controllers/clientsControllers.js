@@ -30,11 +30,33 @@ export class ClientsController {
                 })
             }
 
+            // Formato del cliente
+            const fechaNacimiento = new Date(client.date_of_birth);
+            const hoy = new Date();
+            let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
+
+            if (
+                hoy.getMonth() < fechaNacimiento.getMonth() ||
+                (hoy.getMonth() === fechaNacimiento.getMonth() && hoy.getDate() < fechaNacimiento.getDate())
+            ) {
+                edad--;
+            }
+
+            const clientModified = {};
+
+            for (const [clave, valor] of Object.entries(client)) {
+                clientModified[clave] = valor;
+                if (clave === "date_of_birth") {
+                    clientModified["age"] = edad;
+                }
+
+            }
+
             return res.status(200).json({
                 code_response: CodeResponse.CODE_SUCCESS,
                 message: "Client found.",
                 success: true,
-                data: client
+                data: clientModified
             })
 
         } catch (error) {
@@ -63,7 +85,6 @@ export class ClientsController {
         try {
             // Valida si ya existe el usuario en BD
             const userExists = await UserService.existsByDocument({
-                document_type: req.body.document_type,
                 document_number: req.body.document_number
             });
 

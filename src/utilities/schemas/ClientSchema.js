@@ -7,7 +7,6 @@ const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
 
 const ClientSchema = Object.freeze({
     GET_CLIENT_SCHEMA: Joi.object({
-        document_type: Joi.string().max(3).required(),
         document_number: Joi.string().max(12).required(),
     }),
     CREATE_CLIENT_SCHEMA: Joi.object({

@@ -6,7 +6,6 @@ export class UserRepository {
 
     static async existsByDocument(params, clientBD) {
         const values = [
-            params.document_type,
             params.document_number
         ];
         const executor = clientBD || pool;
@@ -16,7 +15,6 @@ export class UserRepository {
 
     static async findByDocument(params, clientBD) {
         const values = [
-            params.document_type,
             params.document_number
         ];
         const executor = clientBD || pool;

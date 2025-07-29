@@ -9,7 +9,7 @@ const Queries = Object.freeze({
         RETURNING id, login, rol`,
     USER_EXISTS: `
         SELECT EXISTS (
-            SELECT 1 FROM usuarios WHERE tipo_documento = $1 AND numero_documento = $2
+            SELECT 1 FROM usuarios WHERE numero_documento = $1
         ) AS exists
     `,
     USER_CREATE: `
@@ -26,13 +26,13 @@ const Queries = Object.freeze({
         RETURNING *
     `,
     CLIENT_FIND_BY_DOCUMENT: `
-        SELECT us.id, us.nombres, us.apellidos, us.tipo_documento,
-             us.numero_documento, us.email, us.celular, cl.nombre_acudiente,
-             cl.fecha_nacimiento, cl.barrio, cl.direccion, cl.remitido_institucion,
-             cl.institucion_educativa
+        SELECT us.id, us.nombres as names, us.apellidos as last_names, us.tipo_documento as document_type,
+             us.numero_documento as document_number, us.email, us.celular as cellphone_number, 
+             cl.nombre_acudiente as guardian_name, to_char(cl.fecha_nacimiento, 'DD/MM/YYYY') as date_of_birth,
+             cl.barrio as neighborhood, cl.direccion as address, cl.remitido_institucion as sent_by_institution, 
+             cl.institucion_educativa as institution
             FROM usuarios us, clientes cl
-            WHERE us.tipo_documento = $1 
-            AND us.numero_documento = $2
+            WHERE us.numero_documento = $1
             AND us.activo = true
             AND cl.usuario_id = us.id
     `,

@@ -30,7 +30,7 @@ export class ClientsController {
                 })
             }
 
-            // Formato del cliente
+            // Calcula la edad para enviarla
             const fechaNacimiento = new Date(client.date_of_birth);
             const hoy = new Date();
             let edad = hoy.getFullYear() - fechaNacimiento.getFullYear();
@@ -47,6 +47,12 @@ export class ClientsController {
             for (const [clave, valor] of Object.entries(client)) {
                 clientModified[clave] = valor;
                 if (clave === "date_of_birth") {
+                    const dateBD = new Date(valor);
+                    clientModified["date_of_birth"] = dateBD.toLocaleDateString('es-CO', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
                     clientModified["age"] = edad;
                 }
 

@@ -1,6 +1,7 @@
 import { ClientRepository } from "../repositories/clientRepository.js";
 import { UserRepository } from "../repositories/userRepository.js";
 import { pool } from "../db/connection.js";
+import dayjs from 'dayjs';
 
 export class ClientService {
 
@@ -31,7 +32,7 @@ export class ClientService {
             const cliente = await ClientRepository.create({
                 usuario_id: usuario.id,
                 nombre_acudiente: clientData.guardian_name,
-                fecha_nacimiento: clientData.date_of_birth,
+                fecha_nacimiento:   dayjs(clientData.date_of_birth, "DD/MM/YYYY").format("YYYY-MM-DD"),
                 barrio: clientData.neighborhood,
                 direccion: clientData.address,
                 remitido_institucion: clientData.sent_by_institution,

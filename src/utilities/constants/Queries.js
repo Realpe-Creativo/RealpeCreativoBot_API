@@ -28,7 +28,7 @@ const Queries = Object.freeze({
     CLIENT_FIND_BY_DOCUMENT: `
         SELECT us.id, us.nombres as names, us.apellidos as last_names, us.tipo_documento as document_type,
              us.numero_documento as document_number, us.email, us.celular as cellphone_number, 
-             cl.nombre_acudiente as guardian_name, to_char(cl.fecha_nacimiento, 'DD/MM/YYYY') as date_of_birth,
+             cl.nombre_acudiente as guardian_name, cl.fecha_nacimiento as date_of_birth,
              cl.barrio as neighborhood, cl.direccion as address, cl.remitido_institucion as sent_by_institution, 
              cl.institucion_educativa as institution
             FROM usuarios us, clientes cl

@@ -81,6 +81,7 @@ const Queries = Object.freeze({
     PRODUCT_ALL: `
         SELECT pd.id        as product_id,
                pd.nombre    as product_name,
+               pd.descripcion,
                pd.duracion,
                pd.agendable_bot,
                us.id        as user_id,
@@ -100,6 +101,7 @@ const Queries = Object.freeze({
     PRODUCT_BY_ID: `
         SELECT pd.id        as product_id,
                pd.nombre    as product_name,
+               pd.descripcion,
                pd.duracion,
                pd.agendable_bot,
                us.id        as user_id,

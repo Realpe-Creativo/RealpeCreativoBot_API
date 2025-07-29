@@ -25,6 +25,7 @@ export class ProductsController {
         listProducts.push({
           producto_id: item.product_id,
           nombre: item.product_name,
+          descripcion: item.descripcion,
           duracion_minutos: item.duracion,
           es_agendable_por_bot: item.agendable_bot,
           profesional: [
@@ -78,6 +79,7 @@ export class ProductsController {
       const productDetail = {
         producto_id: product.product_id,
         nombre: product.product_name,
+        descripcion: product.descripcion,
         duracion_minutos: product.duracion,
         es_agendable_por_bot: product.agendable_bot,
         profesional: [

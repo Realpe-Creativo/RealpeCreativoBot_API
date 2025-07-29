@@ -8,7 +8,7 @@ export class ChatStatusController {
         try {
             const number = req.params.number;
 
-            const chatStatus = await ChatStatusService.getChatStatusById({
+            const chatStatus = await ChatStatusService.getChatStatusByNumber({
                 number: number
             });
 

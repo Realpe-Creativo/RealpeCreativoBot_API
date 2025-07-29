@@ -1,6 +1,5 @@
 import { ChatStatusRepository } from "../repositories/chatStatusRepository.js";
 import { pool } from "../db/connection.js";
-import {ClientRepository} from "../repositories/clientRepository.js";
 
 export class ChatStatusService {
     static async getChatStatusByNumber(clientData) {
@@ -25,6 +24,11 @@ export class ChatStatusService {
             }, clientBD);
 
             await clientBD.query("COMMIT");
+
+            // Remove keys unused
+            delete chatStatus.creation_date;
+            delete chatStatus.update_date;
+
             return chatStatus;
         } catch (error) {
             await clientBD.query("ROLLBACK");
@@ -46,6 +50,11 @@ export class ChatStatusService {
             }, clientBD);
 
             await clientBD.query("COMMIT");
+
+            // Remove keys unused
+            delete chatStatus.creation_date;
+            delete chatStatus.update_date;
+
             return chatStatus;
         } catch (error) {
             await clientBD.query("ROLLBACK");

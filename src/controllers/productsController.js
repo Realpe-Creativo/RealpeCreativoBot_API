@@ -1,179 +1,110 @@
-// Simulación de base de datos en memoria
-let products = [
-  { id: 1, name: 'Laptop', price: 999.99, category: 'Electrónicos', stock: 10 },
-  { id: 2, name: 'Smartphone', price: 599.99, category: 'Electrónicos', stock: 25 },
-  { id: 3, name: 'Libro de JavaScript', price: 29.99, category: 'Libros', stock: 50 }
-];
+import { ProductsService } from "../services/productsService.js";
+import CodeResponse from "../utilities/constants/CodeResponse.js";
+import ProductSchema from "../utilities/schemas/ProductSchema.js";
 
-let nextProductId = 4;
+export class ProductsController {
 
-const getAllProducts = (req, res) => {
-  try {
-    const { page = 1, limit = 10, category, minPrice, maxPrice } = req.query;
-    let filteredProducts = products;
+  static async getProducts(req, res) {
 
-    // Filtros
-    if (category) {
-      filteredProducts = filteredProducts.filter(product => 
-        product.category.toLowerCase().includes(category.toLowerCase())
-      );
-    }
+    try {
 
-    if (minPrice) {
-      filteredProducts = filteredProducts.filter(product => 
-        product.price >= parseFloat(minPrice)
-      );
-    }
+      const products = await ProductsService.findAllProducts(null);
 
-    if (maxPrice) {
-      filteredProducts = filteredProducts.filter(product => 
-        product.price <= parseFloat(maxPrice)
-      );
-    }
-
-    // Paginación
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-    const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
-
-    res.json({
-      success: true,
-      data: paginatedProducts,
-      pagination: {
-        currentPage: parseInt(page),
-        totalPages: Math.ceil(filteredProducts.length / limit),
-        totalProducts: filteredProducts.length,
-        hasNext: endIndex < filteredProducts.length,
-        hasPrev: startIndex > 0
+      if (products == null || products.rowCount <= 0) {
+        return res.status(404).json({
+          code_response: CodeResponse.CODE_FAILED,
+          message: `There is any product registered.`,
+          success: false,
+          data: null
+        })
       }
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error al obtener productos',
-      error: error.message
-    });
-  }
-};
 
-const getProductById = (req, res) => {
-  try {
-    const { id } = req.params;
-    const product = products.find(p => p.id === parseInt(id));
+      const listProducts = [];
 
-    if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: 'Producto no encontrado'
+      products.rows.forEach((item) => {
+        listProducts.push({
+          producto_id: item.product_id,
+          nombre: item.product_name,
+          duracion_minutos: item.duracion,
+          es_agendable_por_bot: item.agendable_bot,
+          profesional: [
+            {
+              profesional_id: item.user_id,
+              nombres: item.professional_names,
+              apellidos: item.professional_lastnames,
+              cargo: item.cargo,
+              numero_whatsapp: item.numero_whatsapp
+            }
+          ]
+        });
       });
-    }
 
-    res.json({
-      success: true,
-      data: product
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error al obtener producto',
-      error: error.message
-    });
-  }
-};
+      return res.status(200).json({
+        code_response: CodeResponse.CODE_SUCCESS,
+        message: "Products found.",
+        success: true,
+        data: listProducts
+      })
 
-const createProduct = (req, res) => {
-  try {
-    const { name, price, category, stock = 0 } = req.body;
-
-    const newProduct = {
-      id: nextProductId++,
-      name,
-      price: parseFloat(price),
-      category,
-      stock: parseInt(stock)
-    };
-
-    products.push(newProduct);
-
-    res.status(201).json({
-      success: true,
-      message: 'Producto creado exitosamente',
-      data: newProduct
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error al crear producto',
-      error: error.message
-    });
-  }
-};
-
-const updateProduct = (req, res) => {
-  try {
-    const { id } = req.params;
-    const { name, price, category, stock } = req.body;
-
-    const productIndex = products.findIndex(p => p.id === parseInt(id));
-    if (productIndex === -1) {
-      return res.status(404).json({
+    } catch (error) {
+      return res.status(400).json({
+        code_response: CodeResponse.CODE_FAILED,
+        error: error.message,
         success: false,
-        message: 'Producto no encontrado'
-      });
+        data: null
+      })
     }
-
-    // Actualizar solo los campos proporcionados
-    if (name !== undefined) products[productIndex].name = name;
-    if (price !== undefined) products[productIndex].price = parseFloat(price);
-    if (category !== undefined) products[productIndex].category = category;
-    if (stock !== undefined) products[productIndex].stock = parseInt(stock);
-
-    res.json({
-      success: true,
-      message: 'Producto actualizado exitosamente',
-      data: products[productIndex]
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error al actualizar producto',
-      error: error.message
-    });
   }
-};
 
-const deleteProduct = (req, res) => {
-  try {
-    const { id } = req.params;
-    const productIndex = products.findIndex(p => p.id === parseInt(id));
+  static async getProductById(req, res) {
 
-    if (productIndex === -1) {
-      return res.status(404).json({
+    const { error } = ProductSchema.GET_PRODUCT_SCHEMA.validate(req.body);
+
+    try {
+
+      const product = await ProductsService.findProductById({
+        id: req.body.id
+      });
+
+      if (product == null) {
+        return res.status(404).json({
+          code_response: CodeResponse.CODE_FAILED,
+          message: `Product ${req.body.id} not found.`,
+          success: false,
+          data: null
+        })
+      }
+
+      const productDetail = {
+        producto_id: product.product_id,
+        nombre: product.product_name,
+        duracion_minutos: product.duracion,
+        es_agendable_por_bot: product.agendable_bot,
+        profesional: [
+          {
+            profesional_id: product.user_id,
+            nombres: product.professional_names,
+            apellidos: product.professional_lastnames,
+            cargo: product.cargo,
+            numero_whatsapp: product.numero_whatsapp
+          }
+        ]
+      };
+
+      return res.status(200).json({
+        code_response: CodeResponse.CODE_SUCCESS,
+        message: "Product found.",
+        success: true,
+        data: productDetail
+      })
+
+    } catch (error) {
+      return res.status(400).json({
+        code_response: CodeResponse.CODE_FAILED,
+        error: error.message,
         success: false,
-        message: 'Producto no encontrado'
-      });
+        data: null
+      })
     }
-
-    const deletedProduct = products.splice(productIndex, 1)[0];
-
-    res.json({
-      success: true,
-      message: 'Producto eliminado exitosamente',
-      data: deletedProduct
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error al eliminar producto',
-      error: error.message
-    });
   }
-};
-
-module.exports = {
-  getAllProducts,
-  getProductById,
-  createProduct,
-  updateProduct,
-  deleteProduct
-};
+}

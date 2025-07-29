@@ -3,7 +3,7 @@ const router = express.Router();
 
 // Importar rutas específicas
 const usersRoutes = require('./users');
-const productsRoutes = require('./products');
+const productsRoutes = require('./productsRoutes.js');
 
 // Ruta principal de la API
 router.get('/', (req, res) => {

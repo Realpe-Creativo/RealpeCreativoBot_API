@@ -29,7 +29,7 @@ src/
 ├── routes/
 │   ├── index.js           # Rutas principales
 │   ├── users.js           # Rutas de usuarios
-│   └── products.js        # Rutas de productos
+│   └── productsRoutes.js        # Rutas de productos
 └── server.js              # Servidor principal
 ```
 

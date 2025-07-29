@@ -14,6 +14,7 @@ import authRoutes from "./routes/authRoutes.js";
 import clientsRoutes from "./routes/clientsRoutes.js";
 import professionalsRoutes from "./routes/professionalsRoutes.js";
 import chatStatusRoutes from "./routes/chatStatusRoutes.js";
+import productsRoutes from "./routes/productsRoutes.js";
 
 const app = express();
 
@@ -83,6 +84,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/clients", clientsRoutes);
 app.use("/api/professionals", professionalsRoutes);
 app.use("/api/chat-status", chatStatusRoutes);
+app.use("/api/products", productsRoutes);
 
 // Error handling middleware
 app.use(notFound);

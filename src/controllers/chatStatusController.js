@@ -23,7 +23,7 @@ export class ChatStatusController {
 
             return res.status(200).json({
                 code_response: CodeResponse.CODE_SUCCESS,
-                message: "Professional found.",
+                message: "Chat status found.",
                 success: true,
                 data: chatStatus
             })

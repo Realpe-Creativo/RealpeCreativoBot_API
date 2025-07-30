@@ -141,6 +141,35 @@ const Queries = Object.freeze({
           AND us.id = pf.usuario_id
           AND us.tipo_usuario = 'PROFESSIONAL'
     `,
+    APPOINTMENTS_BY_DATE: `
+        SELECT ci.id,
+               uc.id,
+               ci.fecha_inicial,
+               ci.fecha_final,
+               uc.nombres,
+               uc.apellidos,
+               uc.numero_documento,
+               pd.nombre,
+               up.id,
+               up.nombres,
+               ec.nombre,
+               ci.google_calendar_event_id
+        FROM citas ci,
+             estado_cita ec,
+             clientes cl,
+             productos pd,
+             profesionales pf,
+             usuarios uc,
+             usuarios up
+        WHERE cl.id = ci.cliente_id
+          AND uc.id = cl.usuario_id
+          AND pd.id = ci.producto_id
+          AND pf.id = ci.profesional_id
+          AND up.id = pf.usuario_id
+          AND ec.id = ci.estado_cita_id
+          AND ci.fecha_inicial >= TO_TIMESTAMP($1, 'DD/MM/YYYY')
+          AND ci.fecha_final < TO_TIMESTAMP($2, 'DD/MM/YYYY') + INTERVAL '1 day';
+    `
 });
 
 export default Queries;

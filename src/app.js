@@ -82,7 +82,7 @@ app.get("/health", (req, res) => {
 
 // API routes
 app.use("/api/auth", authRoutes);
-// app.use("/api/appointments", appointmentsRoutes);
+app.use("/api/appointments", appointmentsRoutes);
 app.use("/api/chat-status", chatStatusRoutes);
 app.use("/api/clients", clientsRoutes);
 app.use("/api/products", productsRoutes);

@@ -7,8 +7,11 @@ const router = express.Router();
 // Apply authentication middleware to all routes
 router.use(authenticate);
 
-// POST /api/appointments/get-by-id - Get client By DocumentType and DocumentNumber
-router.post("/get-by-id", AppointmentController.getAppointmentById);
+// GET /api/appointments/ - Get client By DocumentType and DocumentNumber
+router.get("/get-by-date", AppointmentController.getAppointmentsByDate);
+
+// POST /api/appointments/ - Get client By DocumentType and DocumentNumber
+router.post("/", AppointmentController.createAppointment);
 
 // POST /api/clients/getClient - Get client By DocumentType and DocumentNumber
 // router.post("/createClient", AppointmentController.createClient);

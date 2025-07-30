@@ -20,8 +20,8 @@ src/
 ├── config/
 │   └── config.js          # Configuración centralizada
 ├── controllers/
-│   ├── usersController.js  # Lógica de usuarios
-│   └── productsController.js # Lógica de productos
+│   ├── UserController.js  # Lógica de usuarios
+│   └── ProductController.js # Lógica de productos
 ├── middleware/
 │   ├── errorHandler.js     # Manejo de errores
 │   ├── notFound.js        # Middleware 404

@@ -1,14 +1,14 @@
-import { ProductsService } from "../services/productsService.js";
+import { ProductService } from "../services/ProductService.js";
 import CodeResponse from "../utilities/constants/CodeResponse.js";
 import ProductSchema from "../utilities/schemas/ProductSchema.js";
 
-export class ProductsController {
+export class ProductController {
 
   static async getProducts(req, res) {
 
     try {
 
-      const products = await ProductsService.findAllProducts(null);
+      const products = await ProductService.findAllProducts(null);
 
       if (products == null || products.rowCount <= 0) {
         return res.status(404).json({
@@ -63,7 +63,7 @@ export class ProductsController {
 
     try {
 
-      const product = await ProductsService.findProductById({
+      const product = await ProductService.findProductById({
         id: req.body.id
       });
 

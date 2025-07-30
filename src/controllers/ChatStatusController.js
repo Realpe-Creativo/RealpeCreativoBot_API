@@ -1,4 +1,4 @@
-import { ChatStatusService } from "../services/chatStatusService.js";
+import { ChatStatusService } from "../services/ChatStatusService.js";
 import CodeResponse from "../utilities/constants/CodeResponse.js";
 import ChatStatusSchema from "../utilities/schemas/ChatStatusSchema.js";
 

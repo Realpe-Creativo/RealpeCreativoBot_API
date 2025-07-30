@@ -1,4 +1,4 @@
-import { ProfessionalRepository } from "../repositories/professionalRepository.js";
+import { ProfessionalRepository } from "../repositories/ProfessionalRepository.js";
 import { pool } from "../db/connection.js";
 
 export class ProfessionalService {

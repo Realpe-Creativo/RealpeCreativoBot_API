@@ -1,5 +1,5 @@
 import express from "express";
-import { ProfessionalController } from "../controllers/professionalController.js";
+import { ProfessionalController } from "../controllers/ProfessionalController.js";
 import { authenticate } from "../middleware/auth.js";
 
 const router = express.Router();

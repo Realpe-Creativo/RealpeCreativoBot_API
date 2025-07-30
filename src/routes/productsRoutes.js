@@ -1,5 +1,5 @@
 import express from "express";
-import { ProductsController } from "../controllers/productsController.js";
+import { ProductController } from "../controllers/ProductController.js";
 import { authenticate } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -8,9 +8,9 @@ const router = express.Router();
 router.use(authenticate);
 
 // GET /api/products/ Get all products
-router.get("/", ProductsController.getProducts);
+router.get("/", ProductController.getProducts);
 
 // GET /api/products/get-by-id Get product by ID
-router.post("/get-by-id", ProductsController.getProductById);
+router.post("/get-by-id", ProductController.getProductById);
 
 export default router;

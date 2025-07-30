@@ -1,5 +1,5 @@
 import Joi from "joi"
-import { AuthService } from "../services/authService.js"
+import { AuthService } from "../services/AuthService.js"
 import { loginSchema, registerSchema } from "../utilities/schemas/AuthSchema.js"
 import CodeResponse from "../utilities/constants/CodeResponse.js";
 

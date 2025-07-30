@@ -19,10 +19,32 @@ const Queries = Object.freeze({
         RETURNING id, nombres, apellidos, tipo_documento, numero_documento, 
                 email, celular, tipo_usuario, creation_date, update_date, activo
     `,
+    USER_UPDATE: `
+        UPDATE usuarios 
+           SET nombres = $3,
+               apellidos = $4,
+               tipo_documento = $5,
+               email = $6,
+               celular = $7
+         WHERE id = $1
+           AND numero_documento = $2
+        RETURNING *
+    `,
     CLIENT_CREATE: `
         INSERT INTO clientes (usuario_id, nombre_acudiente, fecha_nacimiento, barrio, 
                            direccion, remitido_institucion, institucion_educativa)
             VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING *
+    `,
+    CLIENT_UPDATE: `
+        UPDATE clientes 
+           SET nombre_acudiente = $2,
+               fecha_nacimiento = $3,
+               barrio = $4, 
+               direccion = $5,
+               remitido_institucion = $6,
+               institucion_educativa = $7
+         WHERE usuario_id = $1
         RETURNING *
     `,
     CLIENT_FIND_BY_DOCUMENT: `

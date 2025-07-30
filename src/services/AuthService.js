@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import { UserRepository } from "../repositories/userRepository.js";
-import { AuthLoginRepository } from "../repositories/authLoginRepository.js";
+import { UserRepository } from "../repositories/UserRepository.js";
+import { AuthLoginRepository } from "../repositories/AuthLoginRepository.js";
 
 export class AuthService {
     static generateToken(authLogin) {

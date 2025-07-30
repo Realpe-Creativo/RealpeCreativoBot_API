@@ -39,6 +39,22 @@ export class UserRepository {
         return result.rows[0];
     }
 
+    static async update(params, clientBD) {
+
+        const values = [
+            params.user_id,
+            params.numero_documento,
+            params.nombres,
+            params.apellidos,
+            params.tipo_documento,
+            params.email,
+            params.celular
+        ]
+        const executor = clientBD || pool;
+        const result = await executor.query(Queries.USER_UPDATE, values);
+        return result.rows[0];
+    }
+
     static async validatePassword(plainPassword, hashedPassword) {
         return await bcrypt.compare(plainPassword, hashedPassword)
     }

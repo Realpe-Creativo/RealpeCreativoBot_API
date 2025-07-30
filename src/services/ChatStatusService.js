@@ -1,4 +1,4 @@
-import { ChatStatusRepository } from "../repositories/chatStatusRepository.js";
+import { ChatStatusRepository } from "../repositories/ChatStatusRepository.js";
 import { pool } from "../db/connection.js";
 
 export class ChatStatusService {

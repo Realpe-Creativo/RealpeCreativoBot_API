@@ -1,7 +1,7 @@
 import { pool } from "../db/connection.js"
 import Queries from "../utilities/constants/Queries.js";
 
-export class ProductsRepository {
+export class ProductRepository {
 
     static async getProducts(clientData, clientBD) {
         const executor = clientBD || pool;

@@ -1,4 +1,4 @@
-import { ProfessionalService } from "../services/professionalService.js";
+import { ProfessionalService } from "../services/ProfessionalService.js";
 import CodeResponse from "../utilities/constants/CodeResponse.js";
 
 export class ProfessionalController {

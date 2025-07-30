@@ -7,7 +7,10 @@ const dateTimeFormat = 'DD/MM/YYYY HH:mm';
 
 const AppointmentSchema = Object.freeze({
     CREATE_APPOINTMENT_SCHEMA: Joi.object({
-        client_id: Joi.string().pattern(/^\d{1,8}$/).required(),
+        client_id: Joi.string().pattern(/^\d{1,8}$/).required()
+            .messages({
+                'string.pattern.base': 'The max length of client_id is 8.'
+            }),
         product_id: Joi.string().pattern(/^\d{1,8}$/).required(),
         professional_id: Joi.string().pattern(/^\d{1,8}$/).required(),
         start_date_time: Joi.string()

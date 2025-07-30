@@ -13,8 +13,8 @@ const pool = new Pool({
     password: process.env.DB_PASSWORD,
     ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,
     max: Number.parseInt(process.env.DB_MAX_CONNECTIONS) || 20,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000,
+    idleTimeoutMillis: Number.parseInt(process.env.DB_IDLE_TIMEOUT) || 60000,
+    connectionTimeoutMillis: Number.parseInt(process.env.DB_CONNECTION_TIMEOUT) || 10000,
 });
 
 export const connectDB = async () => {

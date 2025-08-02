@@ -7,12 +7,33 @@ const dateTimeFormat = 'DD/MM/YYYY HH:mm';
 
 const AppointmentSchema = Object.freeze({
     CREATE_APPOINTMENT_SCHEMA: Joi.object({
-        client_id: Joi.string().pattern(/^\d{1,8}$/).required()
+        client_id: Joi.string()
+            .pattern(/^\d+$/)
+            .max(8)
+            .required()
             .messages({
-                'string.pattern.base': 'The max length of client_id is 8.'
+                'string.pattern.base': 'The client_id must be numeric.',
+                'string.max': 'The maximum length of client_id is 8 characters.',
+                'any.required': 'The client_id is required.'
             }),
-        product_id: Joi.string().pattern(/^\d{1,8}$/).required(),
-        professional_id: Joi.string().pattern(/^\d{1,8}$/).required(),
+        product_id: Joi.string()
+            .pattern(/^\d+$/)
+            .max(8)
+            .required()
+            .messages({
+                'string.pattern.base': 'The product_id must be numeric.',
+                'string.max': 'The maximum length of product_id is 8 characters.',
+                'any.required': 'The product_id is required.'
+            }),
+        professional_id: Joi.string()
+            .pattern(/^\d+$/)
+            .max(8)
+            .required()
+            .messages({
+                'string.pattern.base': 'The professional_id must be numeric.',
+                'string.max': 'The maximum length of professional_id is 8 characters.',
+                'any.required': 'The professional_id is required.'
+            }),
         start_date_time: Joi.string()
             .required()
             .custom((value, helpers) => {
@@ -30,7 +51,8 @@ const AppointmentSchema = Object.freeze({
         end_date_time: Joi.string()
             .required()
             .custom((value, helpers) => {
-                const { start_date_time } = helpers.state.ancestors[3];
+
+                const { start_date_time } = helpers.state.ancestors[0];
                 console.log(start_date_time);
 
                 const start = dayjs(start_date_time, dateTimeFormat, true);
@@ -59,13 +81,35 @@ const AppointmentSchema = Object.freeze({
             }),
         google_calendar_event_id: Joi.string().max(255).required(),
         google_calendar_url_event: Joi.string().required(),
-        current_state_id: Joi.string().pattern(/^\d{1,8}$/).required(),
+        current_state_id: Joi.string()
+            .pattern(/^\d+$/)
+            .max(8)
+            .required()
+            .messages({
+                'string.pattern.base': 'The current_state_id must be numeric.',
+                'string.max': 'The maximum length of current_state_id is 8 characters.',
+                'any.required': 'The current_state_id is required.'
+            }),
         observations: Joi.string().required()
     }),
     UPDATE_CLIENT_SCHEMA: Joi.object({
-        id: Joi.string().pattern(/^\d{1,8}$/).required(),
+        id: Joi.string()
+            .pattern(/^\d+$/)
+            .max(8)
+            .required()
+            .messages({
+                'string.pattern.base': 'The id must be numeric.',
+                'string.max': 'The maximum length of id is 8 characters.',
+                'any.required': 'The id is required.'
+            }),
         document_number: Joi.string().max(20).required(),
-        document_type: Joi.string().max(3).required(),
+        document_type: Joi.string()
+            .valid('CC', 'CE', 'TI', 'PA', 'RC', 'PEP', 'PPT')
+            .required()
+            .messages({
+                'any.only': 'document_type is invalid. Accepted values: CC, CE, TI, PA, RC, PEP, PPT.',
+                'any.required': 'The document_type is required.',
+            }),
         names: Joi.string().max(100).required(),
         last_names: Joi.string().max(100).required(),
         email: Joi.string().max(255).email().required(),

@@ -6,7 +6,8 @@ export class ProfessionalController {
     static async getProfessionalById(req, res) {
 
         try {
-            const id = req.params.id;
+
+            const {id} = req.query;
 
             const professional = await ProfessionalService.getProfessionalById({
                 id: id

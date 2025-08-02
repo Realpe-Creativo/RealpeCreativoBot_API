@@ -7,10 +7,10 @@ const router = express.Router();
 // Apply authentication middleware to all routes
 router.use(authenticate);
 
+// GET /api/professionals/:id - Get professional By ID
+router.get("/", ProfessionalController.getProfessionalById);
+
 // GET /api/professionals/search - Get professional By WppNumber and Occupation
 router.get("/search", ProfessionalController.getProfessionalSearch);
-
-// GET /api/professionals/:id - Get professional By ID
-router.get("/:id", ProfessionalController.getProfessionalById);
 
 export default router;

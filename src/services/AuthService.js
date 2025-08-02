@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { UserRepository } from "../repositories/UserRepository.js";
 import { AuthLoginRepository } from "../repositories/AuthLoginRepository.js";
+import {pool} from "../db/connection.js";
 
 export class AuthService {
     static generateToken(authLogin) {
@@ -20,52 +21,77 @@ export class AuthService {
     }
 
     static async getToken(login, password) {
-        const user = await AuthLoginRepository.findByLogin(login);
+        const clientBD = await pool.connect();
 
-        if (!user) {
-            throw new Error(`The user ${login} doesn't exist.`);
+        try {
+            await clientBD.query("BEGIN");
+
+            const user = await AuthLoginRepository.findByLogin(login, clientBD);
+
+            if (!user) {
+                throw new Error(`The user ${login} doesn't exist.`);
+            }
+
+            if (user.status === false) {
+                throw new Error(`The user ${login} isn't active.`);
+            }
+
+            const isValidPassword = await UserRepository.validatePassword(password, user.password);
+
+            if (!isValidPassword) {
+                throw new Error("Invalid credentials.");
+            }
+
+            // Remove password from user object
+            delete user.password;
+
+            const token = this.generateToken(user);
+            const refreshToken = this.generateRefreshToken(user);
+
+            return {
+                user,
+                token,
+                refreshToken,
+            }
+
+        } catch (error) {
+            await clientBD.query("ROLLBACK");
+            throw error;
+        } finally {
+            clientBD.release();
         }
 
-        if (user.status === false) {
-            throw new Error(`The user ${login} isn't active.`);
-        }
-
-        const isValidPassword = await UserRepository.validatePassword(password, user.password);
-
-        if (!isValidPassword) {
-            throw new Error("Invalid credentials.");
-        }
-
-        // Remove password from user object
-        delete user.password;
-
-        const token = this.generateToken(user);
-        const refreshToken = this.generateRefreshToken(user);
-
-        return {
-            user,
-            token,
-            refreshToken,
-        }
     }
 
     static async register(authLoginData) {
-        // Check if user already exists
-        const existingLogin = await AuthLoginRepository.findByLogin(authLoginData.login);
+        const clientBD = await pool.connect();
 
-        if (existingLogin) {
-            throw new Error("User already exists with this login.");
+        try {
+            await clientBD.query("BEGIN");
+            // Check if user already exists
+            const existingLogin = await AuthLoginRepository.findByLogin(authLoginData.login);
+
+            if (existingLogin) {
+                throw new Error("User already exists with this login.");
+            }
+
+            const user = await AuthLoginRepository.create(authLoginData);
+            const token = this.generateToken(user);
+            const refreshToken = this.generateRefreshToken(user);
+
+            return {
+                user,
+                token,
+                refreshToken,
+            }
+        }  catch (error) {
+            await clientBD.query("ROLLBACK");
+            throw error;
+        } finally {
+            clientBD.release();
         }
 
-        const user = await AuthLoginRepository.create(authLoginData);
-        const token = this.generateToken(user);
-        const refreshToken = this.generateRefreshToken(user);
 
-        return {
-            user,
-            token,
-            refreshToken,
-        }
     }
 
     static async refreshToken(refreshToken) {

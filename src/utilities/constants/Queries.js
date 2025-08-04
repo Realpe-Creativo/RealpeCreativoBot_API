@@ -172,7 +172,66 @@ const Queries = Object.freeze({
     `,
     APPOINTMENT_CREATE: `
         SELECT * FROM fn_insert_appointment($1, $2, $3, $4, $5, $6, $7, $8, $9)
-    `
+    `,
+    PRODUCT_PROFESSIONAL_EXISTS: `
+        SELECT EXISTS (
+            SELECT 1
+            FROM productos_profesionales pp
+                     JOIN profesionales pf ON pf.id = pp.profesional_id
+            WHERE pf.usuario_id = $1
+              AND pp.producto_id = $2
+        ) AS exists
+    `,
+    PRODUCT_PROFESSIONAL_BY_PRODUCT: `
+        SELECT pd.id               as product_id,
+               pd.nombre           as product_name,
+               pd.descripcion      as product_description,
+               pd.duracion         as product_duration,
+               pd.agendable_bot    as product_scheduled_by_bot,
+               us.id               as professional_id,
+               us.nombres          as professional_names,
+               us.apellidos        as professional_last_names,
+               us.tipo_documento   as professional_document_type,
+               us.numero_documento as professional_document_number,
+               us.celular          as professional_cell_phone,
+               us.email            as professional_email,
+               pf.cargo            as professional_occupation,
+               pf.numero_whatsapp  as professional_whatsapp
+        FROM productos pd,
+             productos_profesionales pp,
+             profesionales pf,
+             usuarios us
+        WHERE pd.id = $1
+          AND pp.producto_id = pd.id
+          AND pf.id = pp.profesional_id
+          AND us.id = pf.usuario_id
+          AND us.tipo_usuario = 'PROFESSIONAL'
+    `,
+    PRODUCT_PROFESSIONAL_BY_PROFESSIONAL: `
+        SELECT us.id               as professional_id,
+               us.nombres          as professional_names,
+               us.apellidos        as professional_last_names,
+               us.tipo_documento   as professional_document_type,
+               us.numero_documento as professional_document_number,
+               us.email            as professional_email,
+               us.celular          as professional_cell_phone,
+               pf.cargo            as professional_occupation,
+               pf.numero_whatsapp  as professional_whatsapp,
+               pd.id               as product_id,
+               pd.nombre           as product_name,
+               pd.descripcion      as product_description,
+               pd.duracion         as product_duration,
+               pd.agendable_bot    as product_scheduled_by_bot
+        FROM usuarios us,
+             profesionales pf,
+             productos_profesionales pp,
+             productos pd
+        WHERE us.id = $1
+          AND us.tipo_usuario = 'PROFESSIONAL'
+          and pf.usuario_id = us.id
+          AND pp.profesional_id = pf.id
+          AND pd.id = pp.producto_id
+    `,
 });
 
 export default Queries;

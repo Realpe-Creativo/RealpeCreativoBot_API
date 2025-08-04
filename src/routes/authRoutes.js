@@ -3,6 +3,8 @@ import { AuthController } from "../controllers/AuthController.js";
 
 const router = express.Router();
 
+
+
 // POST /api/auth/getToken - Generate Token
 router.post("/getToken", AuthController.getToken);
 

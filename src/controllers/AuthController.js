@@ -9,8 +9,13 @@ const refreshTokenSchema = Joi.object({
 
 export class AuthController {
     static async getToken(req, res) {
-        const { error } = loginSchema.validate(req.body)
+
+        console.log(`[${req.requestId}] Ingresa en AuthController.getToken`);
+
+        const { error } = loginSchema.validate(req.body);
+
         if (error) {
+            console.log(`[${req.requestId}] Ocurrio un error en la validacion de la estructura de la peticion : ${error.details[0].message}}`);
             return res.status(400).json({
                 code_response: CodeResponse.CODE_FAILED,
                 message: error.details[0].message,
@@ -20,9 +25,9 @@ export class AuthController {
         }
 
         try {
-            const { login, password } = req.body
-            const result = await AuthService.getToken(login, password)
+            const result = await AuthService.getToken(req);
 
+            console.log(`[${req.requestId}] Se obtuvo respuesta exitosa.`);
             res.status(200).json({
                 code_response: CodeResponse.CODE_SUCCESS,
                 message: "Login successful",

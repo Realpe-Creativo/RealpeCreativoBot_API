@@ -2,6 +2,7 @@ import { AppointmentService } from "../services/AppointmentService.js";
 import AppointmentSchema from "../utilities/schemas/AppointmentSchema.js";
 import CodeResponse from "../utilities/constants/CodeResponse.js";
 import dayjs from "dayjs";
+import {ProductProfessionalService} from "../services/ProductProfessionalService.js";
 
 export class AppointmentController {
 
@@ -155,6 +156,8 @@ export class AppointmentController {
 
     static async createAppointment(req, res) {
 
+        console.log("Ingresa en validaci");
+
         const { error } = AppointmentSchema.CREATE_APPOINTMENT_SCHEMA.validate(req.body);
 
         if (error) {
@@ -167,17 +170,19 @@ export class AppointmentController {
         }
 
         try {
-            const appointment = await AppointmentService.createAppointment({
-                client_id: req.body.client_id,
-                product_id: req.body.product_id,
-                professional_id: req.body.professional_id,
-                start_date_time: req.body.start_date_time,
-                end_date_time: req.body.end_date_time,
-                google_calendar_event_id: req.body.google_calendar_event_id,
-                google_calendar_url_event: req.body.google_calendar_url_event,
-                current_state_id: req.body.current_state_id,
-                observations: req.body.observations
-            });
+            // Validate relation of professional and product
+            const relationExists = await ProductProfessionalService.isProfessionalLinkedToProduct(req.body);
+
+            if (!relationExists) {
+                return res.status(401).json({
+                    code_response: CodeResponse.CODE_FAILED,
+                    message: `The product ${req.body.product_id} doesn't have relation with the professional ${req.body.professional_id}.`,
+                    success: false,
+                    data: null
+                });
+            }
+
+            const appointment = await AppointmentService.createAppointment(req.body);
 
             if (appointment == null) {
                 return res.status(401).json({
@@ -186,6 +191,26 @@ export class AppointmentController {
                     success: false,
                     data: null
                 })
+            }
+
+            // Query for professionals by product id
+            const professionalsFound = await ProductProfessionalService.findProfessionalsByProduct(req.body);
+
+            const professionalsList = []
+            if (professionalsFound != null) {
+                professionalsFound.forEach(p => {
+                    professionalsList.push({
+                        id: p.professional_id,
+                        names: p.professional_names,
+                        last_names: p.professional_last_names,
+                        document_type: p.professional_document_type,
+                        document_number: p.professional_document_number,
+                        email: p.professional_email,
+                        cell_phone: p.professional_cell_phone,
+                        occupation: p.professional_occupation,
+                        whatsapp_number: p.professional_whatsapp
+                    })
+                });
             }
 
             // Build response
@@ -204,28 +229,30 @@ export class AppointmentController {
                     id: appointment.product_id,
                     name: appointment.product_name,
                     description: appointment.product_description,
-                    es_agendable_por_bot: true,
-                    duracion_minutos: 2147483647,
-                    profesionales: []
+                    scheduled_by_bot: appointment.product_scheduled_by_bot,
+                    duration: appointment.product_duration,
+                    professionals: professionalsList
                 },
                 assigned_professional: {
-                    id: appointment.client_id,
-                    names: appointment.client_names,
-                    last_names: appointment.client_last_names,
-                    document_type: appointment.client_document_type,
-                    document_number: appointment.client_document_number,
-                    email: appointment.client_email,
-                    cellphone: appointment.client_cellphone
+                    id: appointment.professional_id,
+                    names: appointment.professional_names,
+                    last_names: appointment.professional_last_names,
+                    document_type: appointment.professional_document_type,
+                    document_number: appointment.professional_document_number,
+                    email: appointment.professional_email,
+                    cell_phone: appointment.professional_cellphone,
+                    occupation: appointment.professional_occupation,
+                    whatsapp_number: appointment.professional_whatsapp
                 },
-                google_calendar_event_id: "string",
-                google_calendar_url_event: "string",
-                estado_actual: {
-                    id: 0,
-                    cita: 0,
-                    estado_cita: "Agendado",
-                    fecha_registro: "2025-08-02T03:33:53.139Z"
+                google_calendar_event_id: appointment.google_calendar_event_id,
+                google_calendar_event_url: appointment.google_calendar_event_url,
+                current_state: {
+                    code: appointment.status_code,
+                    description: appointment.status_description,
+                    appointment_id: appointment.appointment_id,
+                    register_date: appointment.status_creation_date
                 },
-                observations: "string"
+                observations: appointment.observations
             }
 
             return res.status(201).json({

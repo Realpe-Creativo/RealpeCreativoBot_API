@@ -20,34 +20,42 @@ export class AuthService {
         return jwt.sign({ id: authLogin.id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN })
     }
 
-    static async getToken(login, password) {
+    static async getToken(req) {
+        const { login, password } = req.body;
+        console.log(`[${req.requestId}] Ingresa en AuthService.getToken`);
         const clientBD = await pool.connect();
 
         try {
             await clientBD.query("BEGIN");
 
+            console.log(`[${req.requestId}] Va a validar usuario y clave`);
             const user = await AuthLoginRepository.findByLogin(login, clientBD);
 
             if (!user) {
+                console.log(`[${req.requestId}] No se encontro el usuario`);
                 throw new Error(`The user ${login} doesn't exist.`);
             }
 
             if (user.status === false) {
+                console.log(`[${req.requestId}] El usuario esta inactivo`);
                 throw new Error(`The user ${login} isn't active.`);
             }
 
             const isValidPassword = await UserRepository.validatePassword(password, user.password);
 
             if (!isValidPassword) {
+                console.log(`[${req.requestId}] Credenciales invalidas`);
                 throw new Error("Invalid credentials.");
             }
 
             // Remove password from user object
             delete user.password;
 
+            console.log(`[${req.requestId}] Va a generar token...`);
             const token = this.generateToken(user);
             const refreshToken = this.generateRefreshToken(user);
 
+            console.log(`[${req.requestId}] Generado correctamente...`);
             return {
                 user,
                 token,

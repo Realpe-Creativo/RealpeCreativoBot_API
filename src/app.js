@@ -17,10 +17,21 @@ import clientsRoutes from "./routes/clientsRoutes.js";
 import productsRoutes from "./routes/productsRoutes.js";
 import professionalsRoutes from "./routes/professionalsRoutes.js";
 
+import { randomUUID } from 'crypto';
+
 const app = express();
+
+
 
 // Middlewares
 app.use(express.json());
+
+// Asignacion de ID
+app.use((req, res, next) => {
+    req.requestId = randomUUID();
+    console.log(`[${req.requestId}] New request: ${req.method} ${req.url}`);
+    next();
+});
 
 // Security middleware
 app.use(

@@ -152,6 +152,7 @@ const Queries = Object.freeze({
                pd.nombre as producto_nombre,
                up.id as profesional_id,
                up.nombres as profesional_nombres,
+               ec.id as estado_cita_id,
                ec.nombre as estado_cita,
                ci.google_calendar_event_id
         FROM citas ci,

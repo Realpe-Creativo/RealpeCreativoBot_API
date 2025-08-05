@@ -63,7 +63,7 @@ const Queries = Object.freeze({
              us.email, us.celular, pr.cargo, pr.numero_whatsapp,
              pr.activo
             FROM usuarios us, profesionales pr
-            WHERE pr.id = $1
+            WHERE us.id = $1
             AND pr.usuario_id = us.id
             AND pr.activo = true;
     `,

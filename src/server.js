@@ -1,6 +1,6 @@
 import "express-async-errors";
 
-import { connectDB } from "./db/connection.js";
+import { connectDB, closePool } from "./db/connection.js";
 import dotenv from "dotenv";
 import app from "./app.js";
 
@@ -29,15 +29,31 @@ const startServer = async () => {
   }
 }
 
+const gracefulShutdown = async (signal) => {
+  console.log(`👋 ${signal} received, shutting down gracefully`);
+  try {
+    await closePool();
+    console.log("✅ Pool de conexiones cerrado correctamente");
+    process.exit(0);
+  } catch (error) {
+    console.error("❌ Error durante el cierre:", error);
+    process.exit(1);
+  }
+};
+
 // Graceful shutdown
-process.on("SIGTERM", () => {
-  console.log("👋 SIGTERM received, shutting down gracefully");
-  process.exit(0);
+process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
+process.on("SIGINT", () => gracefulShutdown("SIGINT"));
+
+// Handle uncaught exceptions
+process.on("uncaughtException", (error) => {
+  console.error("❌ Uncaught Exception:", error);
+  gracefulShutdown("UNCAUGHT_EXCEPTION");
 });
 
-process.on("SIGINT", () => {
-  console.log("👋 SIGINT received, shutting down gracefully");
-  process.exit(0);
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("❌ Unhandled Rejection at:", promise, "reason:", reason);
+  gracefulShutdown("UNHANDLED_REJECTION");
 });
 
 startServer();

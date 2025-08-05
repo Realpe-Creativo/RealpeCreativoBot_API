@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url';
 
 import { notFound } from "./middleware/notFound.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import { DatabaseHelper } from "./utilities/DatabaseHelper.js";
 
 import authRoutes from "./routes/authRoutes.js";
 import appointmentsRoutes from "./routes/appointmentsRoutes.js";
@@ -73,7 +74,7 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 } else {
     const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
+    const _dirname = path.dirname(_filename);
     const accessLogStream = fs.createWriteStream(
         path.join(__dirname, 'access.log'),
         { flags: 'a' }
@@ -81,14 +82,40 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('combined', { stream: accessLogStream }));
 }
 
-// Health check endpoint
-app.get("/health", (req, res) => {
-    res.status(200).json({
-        status: "OK",
-        timestamp: new Date().toISOString(),
-        uptime: process.uptime(),
-        environment: process.env.NODE_ENV
-    })
+// Health check endpoint mejorado
+app.get("/health", async (req, res) => {
+    try {
+        const dbHealth = await DatabaseHelper.checkHealth();
+        const poolStats = DatabaseHelper.getPoolStats();
+
+        const healthStatus = {
+            status: dbHealth ? "OK" : "ERROR",
+            timestamp: new Date().toISOString(),
+            uptime: process.uptime(),
+            environment: process.env.NODE_ENV,
+            database: {
+                connected: dbHealth,
+                pool: {
+                    total: poolStats.totalCount,
+                    idle: poolStats.idleCount,
+                    waiting: poolStats.waitingCount
+                }
+            },
+            memory: {
+                used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+                total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024)
+            }
+        };
+
+        const statusCode = dbHealth ? 200 : 503;
+        res.status(statusCode).json(healthStatus);
+    } catch (error) {
+        res.status(503).json({
+            status: "ERROR",
+            timestamp: new Date().toISOString(),
+            error: error.message
+        });
+    }
 });
 
 // API routes

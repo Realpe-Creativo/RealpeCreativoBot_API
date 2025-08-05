@@ -30,4 +30,14 @@ export const connectDB = async () => {
     }
 };
 
+export const closePool = async () => {
+    try {
+        await pool.end();
+        console.log('🔒 Pool de conexiones cerrado correctamente');
+    } catch (error) {
+        console.error('❌ Error cerrando el pool:', error);
+        throw error;
+    }
+};
+
 export { pool };

@@ -3,18 +3,18 @@ import Queries from "../utilities/constants/Queries.js";
 
 export class ProductRepository {
 
-    static async getProducts(clientData, clientBD) {
-        const executor = clientBD || pool;
-        const result = await executor.query(Queries.PRODUCT_ALL);
+    static async getProducts() {
+        // const executor = clientBD || pool;
+        const result = await pool.query(Queries.PRODUCT_ALL);
         return result || null;
     }
 
-    static async findProductById(clientData, clientBD) {
+    static async findProductById(clientData) {
         const values = [
             clientData.id
         ]
-        const executor = clientBD || pool;
-        const result = await executor.query(Queries.PRODUCT_BY_ID, values);
+        // const executor = clientBD || pool;
+        const result = await pool.query(Queries.PRODUCT_BY_ID, values);
         return result.rows[0] || null;
     }
 }

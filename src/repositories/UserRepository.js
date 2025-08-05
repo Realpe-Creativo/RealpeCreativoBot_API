@@ -13,12 +13,12 @@ export class UserRepository {
         return result.rows[0].exists;
     }
 
-    static async findByDocument(params, clientBD) {
+    static async findByDocument(params) {
         const values = [
             params.document_number
         ];
-        const executor = clientBD || pool;
-        const result = await executor.query(Queries.CLIENT_FIND_BY_DOCUMENT,values);
+        // const executor = clientBD || pool;
+        const result = await pool.query(Queries.CLIENT_FIND_BY_DOCUMENT,values);
         return result.rows[0] || null;
     }
 

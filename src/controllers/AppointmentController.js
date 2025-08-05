@@ -137,11 +137,56 @@ export class AppointmentController {
                 });
             }
 
+            const result = [];
+            resultAppointments.forEach(r => {
+                result.push({
+                    cita : {
+                        id: r.appointment_id,
+                        fecha_hora_inicio: r.start_date_time,
+                        fecha_hora_fin: r.end_date_time,
+                        observaciones: r.observations,
+                        google_calendar_event_id: r.google_calendar_event_id,
+                        google_calendar_url_event: r.google_calendar_event_url,
+                        estado_actual_id: r.status_code,
+                        estado_actual: r.status_description
+                    },
+                    cliente : {
+                        id: r.client_id,
+                        nombres: r.client_names,
+                        apellidos: r.client_last_names,
+                        tipo_documento: r.client_document_type,
+                        numero_documento: r.client_document_number,
+                        email: r.client_email,
+                        celular: r.client_cellphone,
+                        edad: 25,
+                        fecha_nacimiento: r.client_date_of_birth,
+                        barrio: r.client_neighborhood,
+                        direccion: r.client_address,
+                        remitido_institucion: r.client_sent_by_institution,
+                        colegio: r.client_institution
+                    },
+                    profesional : {
+                        id: r.professional_id,
+                        nombres: r.professional_names,
+                        apellidos: r.professional_last_names,
+                        email: r.professional_email,
+                        cargo: r.professional_occupation,
+                        numero_whatsapp: r.professional_whatsapp
+                    },
+                    producto : {
+                        id: r.product_id,
+                        nombre: r.product_name,
+                        descripcion: r.product_description,
+                        duracion_minutos: r.product_duration
+                    }
+                })
+            });
+
             return res.status(200).json({
                 code_response: CodeResponse.CODE_SUCCESS,
                 message: "Query successfully.",
                 success: true,
-                data: resultAppointments
+                data: result
             })
 
         } catch (error) {

@@ -2,21 +2,21 @@ import { pool } from "../db/connection.js"
 import Queries from "../utilities/constants/Queries.js";
 
 export class ChatStatusRepository {
-    static async findByNumber(clientData, clientBD) {
+    static async findByNumber(clientData) {
         const values = [
             clientData.number
         ]
-        const executor = clientBD || pool;
-        const result = await executor.query(Queries.CHAT_STATUS_BY_NUMBER, values);
+        // const executor = clientBD || pool;
+        const result = await pool.query(Queries.CHAT_STATUS_BY_NUMBER, values);
         return result.rows[0] || null;
     }
 
-    static async existsByNumber(params, clientBD) {
+    static async existsByNumber(params) {
         const values = [
             params.number
         ];
-        const executor = clientBD || pool;
-        const result = await executor.query(Queries.CHAT_STATUS_EXISTS, values);
+        // const executor = clientBD || pool;
+        const result = await pool.query(Queries.CHAT_STATUS_EXISTS, values);
         return result.rows[0].exists;
     }
 

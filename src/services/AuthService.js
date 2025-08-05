@@ -84,6 +84,9 @@ export class AuthService {
             }
 
             const user = await AuthLoginRepository.create(authLoginData);
+
+            await clientBD.query("COMMIT");
+
             const token = this.generateToken(user);
             const refreshToken = this.generateRefreshToken(user);
 

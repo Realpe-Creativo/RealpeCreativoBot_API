@@ -8,18 +8,18 @@ export class AppointmentRepository {
             clientData.start_date,
             clientData.end_date
         ]
-        const executor = clientBD || pool;
-        const result = await executor.query(Queries.APPOINTMENTS_BY_DATE, values);
+        // const executor = clientBD || pool;
+        const result = await pool.query(Queries.APPOINTMENTS_BY_DATE, values);
         return result.rows || null;
     }
 
-    static async getAppointmentsDetailByDate(clientData, clientBD) {
+    static async getAppointmentsDetailByDate(clientData) {
         const values = [
             clientData.start_date,
             clientData.end_date
         ]
-        const executor = clientBD || pool;
-        const result = await executor.query(Queries.APPOINTMENTS_BY_DATE, values);
+        // const executor = clientBD || pool;
+        const result = await pool.query(Queries.APPOINTMENT_BY_DATE_DETAIL, values);
         return result.rows || null;
     }
 

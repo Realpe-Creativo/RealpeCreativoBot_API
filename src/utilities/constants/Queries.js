@@ -169,7 +169,12 @@ const Queries = Object.freeze({
           AND up.id = pf.usuario_id
           AND ec.id = ci.estado_cita_id
           AND ci.fecha_inicial >= TO_TIMESTAMP($1, 'DD/MM/YYYY')
-          AND ci.fecha_final < TO_TIMESTAMP($2, 'DD/MM/YYYY') + INTERVAL '1 day'
+          AND ci.fecha_inicial < TO_TIMESTAMP($2, 'DD/MM/YYYY') + INTERVAL '1 day'
+    `,
+    APPOINTMENT_BY_DATE_DETAIL: `
+        SELECT * FROM vw_citas_detalle vw
+         WHERE vw.start_date_time >= TO_TIMESTAMP($1, 'DD/MM/YYYY')
+           AND vw.start_date_time < TO_TIMESTAMP($2, 'DD/MM/YYYY') + INTERVAL '1 day'
     `,
     APPOINTMENT_CREATE: `
         SELECT * FROM fn_insert_appointment($1, $2, $3, $4, $5, $6, $7, $8, $9)

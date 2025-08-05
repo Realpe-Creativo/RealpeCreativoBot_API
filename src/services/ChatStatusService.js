@@ -3,13 +3,13 @@ import { pool } from "../db/connection.js";
 
 export class ChatStatusService {
     static async getChatStatusByNumber(clientData) {
-        const clientBD = await pool.connect();
-        return await ChatStatusRepository.findByNumber(clientData, clientBD);
+        // const clientBD = await pool.connect();
+        return await ChatStatusRepository.findByNumber(clientData);
     }
 
     static async existsByNumber(number) {
-        const clientBD = await pool.connect();
-        return await ChatStatusRepository.existsByNumber(number, clientBD);
+        // const clientBD = await pool.connect();
+        return await ChatStatusRepository.existsByNumber(number);
     }
 
     static async createStatus(clientData) {

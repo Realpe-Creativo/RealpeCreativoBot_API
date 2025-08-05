@@ -6,8 +6,8 @@ import dayjs from 'dayjs';
 export class ClientService {
 
     static async getClientByDocument(clientData) {
-        const clientBD = await pool.connect();
-        return await UserRepository.findByDocument(clientData, clientBD);
+        // const clientBD = await pool.connect();
+        return await UserRepository.findByDocument(clientData);
     }
 
     static async createClient(clientData) {

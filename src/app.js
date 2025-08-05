@@ -74,7 +74,7 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 } else {
     const __filename = fileURLToPath(import.meta.url);
-    const _dirname = path.dirname(_filename);
+    const __dirname = path.dirname(__filename);
     const accessLogStream = fs.createWriteStream(
         path.join(__dirname, 'access.log'),
         { flags: 'a' }

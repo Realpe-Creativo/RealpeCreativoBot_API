@@ -55,28 +55,11 @@ export class ProductController {
         })
       }
 
-      const productDetail = {
-        producto_id: product.product_id,
-        nombre: product.product_name,
-        descripcion: product.descripcion,
-        duracion_minutos: product.duracion,
-        es_agendable_por_bot: product.agendable_bot,
-        profesional: [
-          {
-            profesional_id: product.user_id,
-            nombres: product.professional_names,
-            apellidos: product.professional_lastnames,
-            cargo: product.cargo,
-            numero_whatsapp: product.numero_whatsapp
-          }
-        ]
-      };
-
       return res.status(200).json({
         code_response: CodeResponse.CODE_SUCCESS,
         message: "Product found.",
         success: true,
-        data: productDetail
+        data: product
       })
 
     } catch (error) {

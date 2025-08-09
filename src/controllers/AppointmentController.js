@@ -213,7 +213,7 @@ export class AppointmentController {
         }
 
         try {
-            // Validate relation of professional and product
+            // Valida relacion de profesional y producto
             const relationExists = await ProductProfessionalService.isProfessionalLinkedToProduct(req.body);
 
             if (!relationExists) {
@@ -308,6 +308,81 @@ export class AppointmentController {
             return res.status(400).json({
                 code_response: CodeResponse.CODE_FAILED,
                 error: error.message || 'Error processing the request.',
+                success: false,
+                data: null
+            })
+        }
+    }
+
+    static async updateAppointment(req, res) {
+
+        const { error } = AppointmentSchema.UPDATE_APPOINTMENT_SCHEMA.validate(req.body);
+
+        if (error) {
+            return res.status(400).json({
+                code_response: CodeResponse.CODE_FAILED,
+                message: error.details[0].message,
+                success: false,
+                data: null
+            })
+        }
+
+        try {
+
+            // Valida relacion de profesional y producto
+            const relationExists = await ProductProfessionalService.isProfessionalLinkedToProduct(req.body);
+
+            if (!relationExists) {
+                return res.status(401).json({
+                    code_response: CodeResponse.CODE_FAILED,
+                    message: `The product ${req.body.product_id} doesn't have relation with the professional ${req.body.professional_id}.`,
+                    success: false,
+                    data: null
+                });
+            }
+
+            // Valida si existe el cliente y concuerda con datos id y document_number
+            const appointmentFound = await AppointmentService.getAppointmentId(req.body);
+
+            if (appointmentFound == null) {
+                return res.status(401).json({
+                    code_response: CodeResponse.CODE_FAILED,
+                    message: `Appointment with id ${req.body.appointment_id} not found.`,
+                    success: false,
+                    data: null
+                });
+            }
+
+            const appointmentUpdated = await AppointmentService.updateAppointment(req.body);
+
+            if (appointmentUpdated == null) {
+                return res.status(401).json({
+                    code_response: CodeResponse.CODE_FAILED,
+                    message: "Appointment information not updated.",
+                    success: false,
+                    data: null
+                })
+            }
+
+            // Cambia formato de fecha
+            // const dateBD = new Date(clientUpdated.date_of_birth);
+            // clientUpdated["date_of_birth"] = dateBD.toLocaleDateString('es-CO', {
+            //     day: '2-digit',
+            //     month: '2-digit',
+            //     year: 'numeric',
+            // });
+
+            return res.status(201).json({
+                code_response: CodeResponse.CODE_SUCCESS,
+                message: "Appointment information updated successfully.",
+                success: true,
+                data: appointmentUpdated
+            })
+
+        } catch (error) {
+            return res.status(400).json({
+                code_response: CodeResponse.CODE_FAILED,
+                error: error.message,
                 success: false,
                 data: null
             })

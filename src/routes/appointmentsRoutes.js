@@ -17,9 +17,9 @@ router.get("/get-by-date", AppointmentController.getAppointmentsByDate);
 router.get("/get-detail-by-date", AppointmentController.getAppointmentsDetailByDate);
 
 // PATCH /api/appointments/ - Get client By DocumentType and DocumentNumber
-router.patch("/:id", AppointmentController.getAppointmentsByDate);
+router.patch("/modify-status", AppointmentController.getAppointmentsByDate);
 
 // PATCH /api/appointments/ - Get client By DocumentType and DocumentNumber
-router.patch("/", AppointmentController.getAppointmentsByDate);
+router.put("/update-appointment", AppointmentController.updateAppointment);
 
 export default router;

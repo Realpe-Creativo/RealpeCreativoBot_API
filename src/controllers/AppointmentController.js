@@ -201,8 +201,6 @@ export class AppointmentController {
 
     static async createAppointment(req, res) {
 
-        console.log("Ingresa en validaci");
-
         const { error } = AppointmentSchema.CREATE_APPOINTMENT_SCHEMA.validate(req.body);
 
         if (error) {
@@ -275,8 +273,7 @@ export class AppointmentController {
                     name: appointment.product_name,
                     description: appointment.product_description,
                     scheduled_by_bot: appointment.product_scheduled_by_bot,
-                    duration: appointment.product_duration,
-                    professionals: professionalsList
+                    duration: appointment.product_duration
                 },
                 assigned_professional: {
                     id: appointment.professional_id,

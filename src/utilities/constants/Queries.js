@@ -67,7 +67,7 @@ const Queries = Object.freeze({
             AND pr.usuario_id = us.id
             AND pr.activo = true;
     `,
-    PROFESSIONAL_BY_FILTERS: `
+    PROFESSIONAL_BY_FILTERS: `    
         SELECT us.id, us.nombres, us.apellidos, us.tipo_documento,
              us.email, us.celular, pr.cargo, pr.numero_whatsapp,
              pr.activo
@@ -101,24 +101,15 @@ const Queries = Object.freeze({
         RETURNING *
     `,
     PRODUCT_ALL: `
-        SELECT pd.id        as product_id,
-               pd.nombre    as product_name,
-               pd.descripcion,
-               pd.duracion,
-               pd.agendable_bot,
-               us.id        as user_id,
-               us.nombres   as professional_names,
-               us.apellidos as professional_lastnames,
-               pf.cargo,
-               pf.numero_whatsapp
-        FROM productos pd,
-             productos_profesionales pp,
-             profesionales pf,
-             usuarios us
-        WHERE pp.producto_id = pd.id
-          AND pf.id = pp.profesional_id
-          AND us.id = pf.usuario_id
-          AND us.tipo_usuario = 'PROFESSIONAL'
+        SELECT
+            producto_id as id,
+            producto_nombre as nombre,
+            descripcion,
+            duracion,
+            agendable_bot as es_agendable_por_bot,
+            profesionales
+        FROM vw_productos_profesionales
+        ORDER BY producto_id DESC
     `,
     PRODUCT_BY_ID: `
         SELECT pd.id        as product_id,

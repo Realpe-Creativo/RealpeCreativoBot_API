@@ -19,32 +19,11 @@ export class ProductController {
         })
       }
 
-      const listProducts = [];
-
-      products.rows.forEach((item) => {
-        listProducts.push({
-          producto_id: item.product_id,
-          nombre: item.product_name,
-          descripcion: item.descripcion,
-          duracion_minutos: item.duracion,
-          es_agendable_por_bot: item.agendable_bot,
-          profesional: [
-            {
-              profesional_id: item.user_id,
-              nombres: item.professional_names,
-              apellidos: item.professional_lastnames,
-              cargo: item.cargo,
-              numero_whatsapp: item.numero_whatsapp
-            }
-          ]
-        });
-      });
-
       return res.status(200).json({
         code_response: CodeResponse.CODE_SUCCESS,
         message: "Products found.",
         success: true,
-        data: listProducts
+        data: products
       })
 
     } catch (error) {

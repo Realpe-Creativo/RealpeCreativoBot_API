@@ -6,6 +6,85 @@ import {ProductProfessionalService} from "../services/ProductProfessionalService
 
 export class AppointmentController {
 
+    static async getAppointmentById(req, res) {
+
+        try {
+            const { id } = req.query;
+            console.log(`id recibido ${id}`)
+
+            const appointmentFound = await AppointmentService.getAppointmentId({
+                appointment_id: id
+            });
+
+            if (appointmentFound == null) {
+                return res.status(404).json({
+                    code_response: CodeResponse.CODE_FAILED,
+                    message: "No data found.",
+                    success: false,
+                    data: null
+                });
+            }
+
+            // Build response
+            const dataResponse = {
+                id: appointmentFound.appointment_id,
+                start_date_time: dayjs(appointmentFound.start_date_time).format("DD/MM/YYYY HH:mm"),
+                end_date_time: dayjs(appointmentFound.end_date_time).format("DD/MM/YYYY HH:mm"),
+                client: {
+                    id: appointmentFound.client_id,
+                    names: appointmentFound.client_names,
+                    last_names: appointmentFound.client_last_names,
+                    document_type: appointmentFound.client_document_type,
+                    document_number: appointmentFound.client_document_number,
+                    email: appointmentFound.client_email,
+                    cellphone: appointmentFound.client_cellphone
+                },
+                product: {
+                    id: appointmentFound.product_id,
+                    name: appointmentFound.product_name,
+                    description: appointmentFound.product_description,
+                    scheduled_by_bot: appointmentFound.product_scheduled_by_bot,
+                    duration: appointmentFound.product_duration
+                },
+                assigned_professional: {
+                    id: appointmentFound.professional_id,
+                    names: appointmentFound.professional_names,
+                    last_names: appointmentFound.professional_last_names,
+                    document_type: appointmentFound.professional_document_type,
+                    document_number: appointmentFound.professional_document_number,
+                    email: appointmentFound.professional_email,
+                    cell_phone: appointmentFound.professional_cellphone,
+                    occupation: appointmentFound.professional_occupation,
+                    whatsapp_number: appointmentFound.professional_whatsapp
+                },
+                google_calendar_event_id: appointmentFound.google_calendar_event_id,
+                google_calendar_event_url: appointmentFound.google_calendar_event_url,
+                current_state: {
+                    code: appointmentFound.status_code,
+                    description: appointmentFound.status_description,
+                    appointment_id: appointmentFound.appointment_id,
+                    register_date: dayjs(appointmentFound.status_creation_date).format("DD/MM/YYYY HH:mm")
+                },
+                observations: appointmentFound.observations
+            }
+
+            return res.status(200).json({
+                code_response: CodeResponse.CODE_SUCCESS,
+                message: "Query successfully.",
+                success: true,
+                data: dataResponse
+            })
+
+        } catch (error) {
+            return res.status(400).json({
+                code_response: CodeResponse.CODE_FAILED,
+                error: error.message,
+                success: false,
+                data: null
+            })
+        }
+    }
+
     static async getAppointmentsByDate(req, res) {
 
         try {
@@ -237,24 +316,24 @@ export class AppointmentController {
             }
 
             // Query for professionals by product id
-            const professionalsFound = await ProductProfessionalService.findProfessionalsByProduct(req.body);
+            // const professionalsFound = await ProductProfessionalService.findProfessionalsByProduct(req.body);
 
-            const professionalsList = []
-            if (professionalsFound != null) {
-                professionalsFound.forEach(p => {
-                    professionalsList.push({
-                        id: p.professional_id,
-                        names: p.professional_names,
-                        last_names: p.professional_last_names,
-                        document_type: p.professional_document_type,
-                        document_number: p.professional_document_number,
-                        email: p.professional_email,
-                        cell_phone: p.professional_cell_phone,
-                        occupation: p.professional_occupation,
-                        whatsapp_number: p.professional_whatsapp
-                    })
-                });
-            }
+            // const professionalsList = []
+            // if (professionalsFound != null) {
+            //     professionalsFound.forEach(p => {
+            //         professionalsList.push({
+            //             id: p.professional_id,
+            //             names: p.professional_names,
+            //             last_names: p.professional_last_names,
+            //             document_type: p.professional_document_type,
+            //             document_number: p.professional_document_number,
+            //             email: p.professional_email,
+            //             cell_phone: p.professional_cell_phone,
+            //             occupation: p.professional_occupation,
+            //             whatsapp_number: p.professional_whatsapp
+            //         })
+            //     });
+            // }
 
             // Build response
             const dataResponse = {
@@ -292,7 +371,7 @@ export class AppointmentController {
                     code: appointment.status_code,
                     description: appointment.status_description,
                     appointment_id: appointment.appointment_id,
-                    register_date: appointment.status_creation_date
+                    register_date: dayjs(appointment.status_creation_date).format("DD/MM/YYYY HH:mm")
                 },
                 observations: appointment.observations
             }
@@ -372,11 +451,54 @@ export class AppointmentController {
             //     year: 'numeric',
             // });
 
+            // Build response
+            const dataResponse = {
+                id: appointmentUpdated.appointment_id,
+                start_date_time: dayjs(appointmentUpdated.start_date_time).format("DD/MM/YYYY HH:mm"),
+                end_date_time: dayjs(appointmentUpdated.end_date_time).format("DD/MM/YYYY HH:mm"),
+                client: {
+                    id: appointmentUpdated.client_id,
+                    names: appointmentUpdated.client_names,
+                    last_names: appointmentUpdated.client_last_names,
+                    document_type: appointmentUpdated.client_document_type,
+                    document_number: appointmentUpdated.client_document_number,
+                    email: appointmentUpdated.client_email,
+                    cellphone: appointmentUpdated.client_cellphone
+                },
+                product: {
+                    id: appointmentUpdated.product_id,
+                    name: appointmentUpdated.product_name,
+                    description: appointmentUpdated.product_description,
+                    scheduled_by_bot: appointmentUpdated.product_scheduled_by_bot,
+                    duration: appointmentUpdated.product_duration
+                },
+                assigned_professional: {
+                    id: appointmentUpdated.professional_id,
+                    names: appointmentUpdated.professional_names,
+                    last_names: appointmentUpdated.professional_last_names,
+                    document_type: appointmentUpdated.professional_document_type,
+                    document_number: appointmentUpdated.professional_document_number,
+                    email: appointmentUpdated.professional_email,
+                    cell_phone: appointmentUpdated.professional_cellphone,
+                    occupation: appointmentUpdated.professional_occupation,
+                    whatsapp_number: appointmentUpdated.professional_whatsapp
+                },
+                google_calendar_event_id: appointmentUpdated.google_calendar_event_id,
+                google_calendar_event_url: appointmentUpdated.google_calendar_event_url,
+                current_state: {
+                    code: appointmentUpdated.status_code,
+                    description: appointmentUpdated.status_description,
+                    appointment_id: appointmentUpdated.appointment_id,
+                    register_date: dayjs(appointmentUpdated.status_creation_date).format("DD/MM/YYYY HH:mm")
+                },
+                observations: appointmentUpdated.observations
+            }
+
             return res.status(201).json({
                 code_response: CodeResponse.CODE_SUCCESS,
                 message: "Appointment information updated successfully.",
                 success: true,
-                data: appointmentUpdated
+                data: dataResponse
             })
 
         } catch (error) {

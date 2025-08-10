@@ -8,6 +8,9 @@ const router = express.Router();
 router.use(authenticate);
 
 // POST /api/appointments/ - Get client By DocumentType and DocumentNumber
+router.get("/", AppointmentController.getAppointmentById);
+
+// POST /api/appointments/ - Get client By DocumentType and DocumentNumber
 router.post("/", AppointmentController.createAppointment);
 
 // GET /api/appointments/ - Get client By DocumentType and DocumentNumber

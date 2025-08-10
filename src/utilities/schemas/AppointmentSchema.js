@@ -187,6 +187,26 @@ const AppointmentSchema = Object.freeze({
             }),
         observations: Joi.string().required()
     }),
+    UPDATE_STATUS_SCHEMA: Joi.object({
+        appointment_id: Joi.string()
+            .pattern(/^\d+$/)
+            .max(8)
+            .required()
+            .messages({
+                'string.pattern.base': 'The appointment_id must be numeric.',
+                'string.max': 'The maximum length of appointment_id is 8 characters.',
+                'any.required': 'The appointment_id is required.'
+            }),
+        current_state_id: Joi.string()
+            .pattern(/^\d+$/)
+            .max(8)
+            .required()
+            .messages({
+                'string.pattern.base': 'The current_state_id must be numeric.',
+                'string.max': 'The maximum length of current_state_id is 8 characters.',
+                'any.required': 'The current_state_id is required.'
+            })
+    })
 });
 
 export default AppointmentSchema;

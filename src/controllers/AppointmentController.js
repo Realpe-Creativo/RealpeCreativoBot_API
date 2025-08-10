@@ -395,7 +395,7 @@ export class AppointmentController {
 
     static async updateAppointment(req, res) {
 
-        const { error } = AppointmentSchema.UPDATE_APPOINTMENT_SCHEMA.validate(req.body);
+        const {error} = AppointmentSchema.UPDATE_APPOINTMENT_SCHEMA.validate(req.body);
 
         if (error) {
             return res.status(400).json({
@@ -443,13 +443,103 @@ export class AppointmentController {
                 })
             }
 
-            // Cambia formato de fecha
-            // const dateBD = new Date(clientUpdated.date_of_birth);
-            // clientUpdated["date_of_birth"] = dateBD.toLocaleDateString('es-CO', {
-            //     day: '2-digit',
-            //     month: '2-digit',
-            //     year: 'numeric',
-            // });
+            // Build response
+            const dataResponse = {
+                id: appointmentUpdated.appointment_id,
+                start_date_time: dayjs(appointmentUpdated.start_date_time).format("DD/MM/YYYY HH:mm"),
+                end_date_time: dayjs(appointmentUpdated.end_date_time).format("DD/MM/YYYY HH:mm"),
+                client: {
+                    id: appointmentUpdated.client_id,
+                    names: appointmentUpdated.client_names,
+                    last_names: appointmentUpdated.client_last_names,
+                    document_type: appointmentUpdated.client_document_type,
+                    document_number: appointmentUpdated.client_document_number,
+                    email: appointmentUpdated.client_email,
+                    cellphone: appointmentUpdated.client_cellphone
+                },
+                product: {
+                    id: appointmentUpdated.product_id,
+                    name: appointmentUpdated.product_name,
+                    description: appointmentUpdated.product_description,
+                    scheduled_by_bot: appointmentUpdated.product_scheduled_by_bot,
+                    duration: appointmentUpdated.product_duration
+                },
+                assigned_professional: {
+                    id: appointmentUpdated.professional_id,
+                    names: appointmentUpdated.professional_names,
+                    last_names: appointmentUpdated.professional_last_names,
+                    document_type: appointmentUpdated.professional_document_type,
+                    document_number: appointmentUpdated.professional_document_number,
+                    email: appointmentUpdated.professional_email,
+                    cell_phone: appointmentUpdated.professional_cellphone,
+                    occupation: appointmentUpdated.professional_occupation,
+                    whatsapp_number: appointmentUpdated.professional_whatsapp
+                },
+                google_calendar_event_id: appointmentUpdated.google_calendar_event_id,
+                google_calendar_event_url: appointmentUpdated.google_calendar_event_url,
+                current_state: {
+                    code: appointmentUpdated.status_code,
+                    description: appointmentUpdated.status_description,
+                    appointment_id: appointmentUpdated.appointment_id,
+                    register_date: dayjs(appointmentUpdated.status_creation_date).format("DD/MM/YYYY HH:mm")
+                },
+                observations: appointmentUpdated.observations
+            }
+
+            return res.status(201).json({
+                code_response: CodeResponse.CODE_SUCCESS,
+                message: "Appointment information updated successfully.",
+                success: true,
+                data: dataResponse
+            })
+
+        } catch (error) {
+            return res.status(400).json({
+                code_response: CodeResponse.CODE_FAILED,
+                error: error.message,
+                success: false,
+                data: null
+            })
+        }
+    }
+
+    static async updateStatusAppointment(req, res) {
+
+        const { error } = AppointmentSchema.UPDATE_STATUS_SCHEMA.validate(req.body);
+
+        if (error) {
+            return res.status(400).json({
+                code_response: CodeResponse.CODE_FAILED,
+                message: error.details[0].message,
+                success: false,
+                data: null
+            })
+        }
+
+        try {
+
+            // Valida si existe el cliente y concuerda con datos id y document_number
+            const appointmentFound = await AppointmentService.getAppointmentId(req.body);
+
+            if (appointmentFound == null) {
+                return res.status(401).json({
+                    code_response: CodeResponse.CODE_FAILED,
+                    message: `Appointment with id ${req.body.appointment_id} not found.`,
+                    success: false,
+                    data: null
+                });
+            }
+
+            const appointmentUpdated = await AppointmentService.updateStatusAppointment(req.body);
+
+            if (appointmentUpdated == null) {
+                return res.status(401).json({
+                    code_response: CodeResponse.CODE_FAILED,
+                    message: "Appointment information not updated.",
+                    success: false,
+                    data: null
+                })
+            }
 
             // Build response
             const dataResponse = {

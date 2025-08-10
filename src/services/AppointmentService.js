@@ -80,4 +80,44 @@ export class AppointmentService {
             clientBD.release();
         }
     }
+
+    static async updateStatusAppointment(clientData) {
+        const clientBD = await pool.connect();
+
+        try {
+            await clientBD.query("BEGIN");
+
+            // Actualiza y entrega el detalle de la cita
+            const appointmentUpdated = AppointmentRepository.updateStatus(
+                {
+                    appointment_id: clientData.appointment_id,
+                    current_state_id: clientData.current_state_id
+                }, clientBD
+            );
+
+            if (!appointmentUpdated) {
+                throw new Error("Update returned no result");
+            }
+
+            const appointmentId = appointmentUpdated.id ?? clientData.appointment_id;
+
+            // 2) Consultar detalle usando la MISMA conexión y con await
+            const appointmentDetail = await AppointmentRepository.findById(
+                { appointment_id: appointmentId },
+                clientBD
+            );
+
+            if (appointmentDetail == null) {
+                throw new Error("An error occurred while updating the appointment.");
+            }
+
+            await clientBD.query("COMMIT");
+            return appointmentDetail;
+        } catch (error) {
+            await clientBD.query("ROLLBACK");
+            throw error;
+        } finally {
+            clientBD.release();
+        }
+    }
 }

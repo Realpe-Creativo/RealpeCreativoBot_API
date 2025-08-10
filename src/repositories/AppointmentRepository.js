@@ -3,11 +3,12 @@ import Queries from "../utilities/constants/Queries.js";
 
 export class AppointmentRepository {
 
-    static async findById(clientData) {
+    static async findById(clientData, clientBD=null) {
         const values = [
             clientData.appointment_id
-        ]
-        const result = await pool.query(Queries.APPOINTMENTS_BY_ID, values);
+        ];
+        const executor = clientBD || pool;
+        const result = await executor.query(Queries.APPOINTMENTS_BY_ID, values);
         return result.rows[0] || null;
     }
 
@@ -61,6 +62,16 @@ export class AppointmentRepository {
         ]
         const executor = clientBD || pool;
         const result = await executor.query(Queries.APPOINTMENT_UPDATE, values);
+        return result.rows[0] || null;
+    }
+
+    static async updateStatus(clientData, clientBD) {
+        const values = [
+            clientData.appointment_id,
+            clientData.current_state_id
+        ]
+        const executor = clientBD || pool;
+        const result = await executor.query(Queries.APPOINTMENT_UPDATE_STATUS, values);
         return result.rows[0] || null;
     }
 }

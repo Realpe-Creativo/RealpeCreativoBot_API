@@ -168,8 +168,8 @@ const Queries = Object.freeze({
         SELECT * FROM fn_update_appointment($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
     `,
     APPOINTMENT_UPDATE_STATUS: `
-        UPDATE citas 
-           SET estado_cita_id = $2,
+        UPDATE citas
+           SET estado_cita_id = $2
          WHERE id = $1
         RETURNING *
     `,

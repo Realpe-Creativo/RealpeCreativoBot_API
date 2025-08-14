@@ -16,24 +16,6 @@ const AppointmentSchema = Object.freeze({
                 'string.max': 'The maximum length of client_id is 8 characters.',
                 'any.required': 'The client_id is required.'
             }),
-        product_id: Joi.string()
-            .pattern(/^\d+$/)
-            .max(8)
-            .required()
-            .messages({
-                'string.pattern.base': 'The product_id must be numeric.',
-                'string.max': 'The maximum length of product_id is 8 characters.',
-                'any.required': 'The product_id is required.'
-            }),
-        professional_id: Joi.string()
-            .pattern(/^\d+$/)
-            .max(8)
-            .required()
-            .messages({
-                'string.pattern.base': 'The professional_id must be numeric.',
-                'string.max': 'The maximum length of professional_id is 8 characters.',
-                'any.required': 'The professional_id is required.'
-            }),
         start_date_time: Joi.string()
             .required()
             .custom((value, helpers) => {
@@ -110,24 +92,6 @@ const AppointmentSchema = Object.freeze({
                 'string.pattern.base': 'The client_id must be numeric.',
                 'string.max': 'The maximum length of client_id is 8 characters.',
                 'any.required': 'The client_id is required.'
-            }),
-        product_id: Joi.string()
-            .pattern(/^\d+$/)
-            .max(8)
-            .required()
-            .messages({
-                'string.pattern.base': 'The product_id must be numeric.',
-                'string.max': 'The maximum length of product_id is 8 characters.',
-                'any.required': 'The product_id is required.'
-            }),
-        professional_id: Joi.string()
-            .pattern(/^\d+$/)
-            .max(8)
-            .required()
-            .messages({
-                'string.pattern.base': 'The professional_id must be numeric.',
-                'string.max': 'The maximum length of professional_id is 8 characters.',
-                'any.required': 'The professional_id is required.'
             }),
         start_date_time: Joi.string()
             .required()

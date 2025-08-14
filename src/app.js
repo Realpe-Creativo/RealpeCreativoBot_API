@@ -15,8 +15,6 @@ import authRoutes from "./routes/authRoutes.js";
 import appointmentsRoutes from "./routes/appointmentsRoutes.js";
 import chatStatusRoutes from "./routes/chatStatusRoutes.js";
 import clientsRoutes from "./routes/clientsRoutes.js";
-import productsRoutes from "./routes/productsRoutes.js";
-import professionalsRoutes from "./routes/professionalsRoutes.js";
 
 import { randomUUID } from 'crypto';
 
@@ -123,8 +121,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/appointments", appointmentsRoutes);
 app.use("/api/chat-status", chatStatusRoutes);
 app.use("/api/clients", clientsRoutes);
-app.use("/api/products", productsRoutes);
-app.use("/api/professionals", professionalsRoutes);
 
 // Error handling middleware
 app.use(notFound);

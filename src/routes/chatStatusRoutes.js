@@ -1,5 +1,6 @@
 import express from "express";
 import { ChatStatusController } from "../controllers/ChatStatusController.js";
+
 import { authenticate } from "../middleware/auth.js";
 
 const router = express.Router();

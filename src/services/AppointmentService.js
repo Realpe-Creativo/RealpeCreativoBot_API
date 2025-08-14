@@ -24,8 +24,6 @@ export class AppointmentService {
 
             const appointmentCreated = await AppointmentRepository.createAppointment({
                 client_id: clientData.client_id,
-                product_id: clientData.product_id,
-                professional_id: clientData.professional_id,
                 start_date_time: dayjs(clientData.start_date_time, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm"),
                 end_date_time: dayjs(clientData.end_date_time, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm"),
                 google_calendar_event_id: clientData.google_calendar_event_id,
@@ -56,8 +54,6 @@ export class AppointmentService {
                 {
                     appointment_id: clientData.appointment_id,
                     client_id: clientData.client_id,
-                    product_id: clientData.product_id,
-                    professional_id: clientData.professional_id,
                     start_date_time: dayjs(clientData.start_date_time, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm"),
                     end_date_time: dayjs(clientData.end_date_time, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm"),
                     google_calendar_event_id: clientData.google_calendar_event_id,

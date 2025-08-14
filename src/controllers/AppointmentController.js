@@ -2,7 +2,6 @@ import { AppointmentService } from "../services/AppointmentService.js";
 import AppointmentSchema from "../utilities/schemas/AppointmentSchema.js";
 import CodeResponse from "../utilities/constants/CodeResponse.js";
 import dayjs from "dayjs";
-import {ProductProfessionalService} from "../services/ProductProfessionalService.js";
 
 export class AppointmentController {
 
@@ -38,24 +37,6 @@ export class AppointmentController {
                     document_number: appointmentFound.client_document_number,
                     email: appointmentFound.client_email,
                     cellphone: appointmentFound.client_cellphone
-                },
-                product: {
-                    id: appointmentFound.product_id,
-                    name: appointmentFound.product_name,
-                    description: appointmentFound.product_description,
-                    scheduled_by_bot: appointmentFound.product_scheduled_by_bot,
-                    duration: appointmentFound.product_duration
-                },
-                assigned_professional: {
-                    id: appointmentFound.professional_id,
-                    names: appointmentFound.professional_names,
-                    last_names: appointmentFound.professional_last_names,
-                    document_type: appointmentFound.professional_document_type,
-                    document_number: appointmentFound.professional_document_number,
-                    email: appointmentFound.professional_email,
-                    cell_phone: appointmentFound.professional_cellphone,
-                    occupation: appointmentFound.professional_occupation,
-                    whatsapp_number: appointmentFound.professional_whatsapp
                 },
                 google_calendar_event_id: appointmentFound.google_calendar_event_id,
                 google_calendar_event_url: appointmentFound.google_calendar_event_url,
@@ -243,20 +224,6 @@ export class AppointmentController {
                         direccion: r.client_address,
                         remitido_institucion: r.client_sent_by_institution,
                         colegio: r.client_institution
-                    },
-                    profesional : {
-                        id: r.professional_id,
-                        nombres: r.professional_names,
-                        apellidos: r.professional_last_names,
-                        email: r.professional_email,
-                        cargo: r.professional_occupation,
-                        numero_whatsapp: r.professional_whatsapp
-                    },
-                    producto : {
-                        id: r.product_id,
-                        nombre: r.product_name,
-                        descripcion: r.product_description,
-                        duracion_minutos: r.product_duration
                     }
                 })
             });
@@ -292,18 +259,6 @@ export class AppointmentController {
         }
 
         try {
-            // Valida relacion de profesional y producto
-            const relationExists = await ProductProfessionalService.isProfessionalLinkedToProduct(req.body);
-
-            if (!relationExists) {
-                return res.status(401).json({
-                    code_response: CodeResponse.CODE_FAILED,
-                    message: `The product ${req.body.product_id} doesn't have relation with the professional ${req.body.professional_id}.`,
-                    success: false,
-                    data: null
-                });
-            }
-
             const appointment = await AppointmentService.createAppointment(req.body);
 
             if (appointment == null) {
@@ -314,27 +269,6 @@ export class AppointmentController {
                     data: null
                 })
             }
-
-            // Query for professionals by product id
-            // const professionalsFound = await ProductProfessionalService.findProfessionalsByProduct(req.body);
-
-            // const professionalsList = []
-            // if (professionalsFound != null) {
-            //     professionalsFound.forEach(p => {
-            //         professionalsList.push({
-            //             id: p.professional_id,
-            //             names: p.professional_names,
-            //             last_names: p.professional_last_names,
-            //             document_type: p.professional_document_type,
-            //             document_number: p.professional_document_number,
-            //             email: p.professional_email,
-            //             cell_phone: p.professional_cell_phone,
-            //             occupation: p.professional_occupation,
-            //             whatsapp_number: p.professional_whatsapp
-            //         })
-            //     });
-            // }
-
             // Build response
             const dataResponse = {
                 id: appointment.appointment_id,
@@ -346,24 +280,6 @@ export class AppointmentController {
                     document_number: appointment.client_document_number,
                     email: appointment.client_email,
                     cellphone: appointment.client_cellphone
-                },
-                product: {
-                    id: appointment.product_id,
-                    name: appointment.product_name,
-                    description: appointment.product_description,
-                    scheduled_by_bot: appointment.product_scheduled_by_bot,
-                    duration: appointment.product_duration
-                },
-                assigned_professional: {
-                    id: appointment.professional_id,
-                    names: appointment.professional_names,
-                    last_names: appointment.professional_last_names,
-                    document_type: appointment.professional_document_type,
-                    document_number: appointment.professional_document_number,
-                    email: appointment.professional_email,
-                    cell_phone: appointment.professional_cellphone,
-                    occupation: appointment.professional_occupation,
-                    whatsapp_number: appointment.professional_whatsapp
                 },
                 google_calendar_event_id: appointment.google_calendar_event_id,
                 google_calendar_event_url: appointment.google_calendar_event_url,
@@ -407,19 +323,6 @@ export class AppointmentController {
         }
 
         try {
-
-            // Valida relacion de profesional y producto
-            const relationExists = await ProductProfessionalService.isProfessionalLinkedToProduct(req.body);
-
-            if (!relationExists) {
-                return res.status(401).json({
-                    code_response: CodeResponse.CODE_FAILED,
-                    message: `The product ${req.body.product_id} doesn't have relation with the professional ${req.body.professional_id}.`,
-                    success: false,
-                    data: null
-                });
-            }
-
             // Valida si existe el cliente y concuerda con datos id y document_number
             const appointmentFound = await AppointmentService.getAppointmentId(req.body);
 
@@ -456,24 +359,6 @@ export class AppointmentController {
                     document_number: appointmentUpdated.client_document_number,
                     email: appointmentUpdated.client_email,
                     cellphone: appointmentUpdated.client_cellphone
-                },
-                product: {
-                    id: appointmentUpdated.product_id,
-                    name: appointmentUpdated.product_name,
-                    description: appointmentUpdated.product_description,
-                    scheduled_by_bot: appointmentUpdated.product_scheduled_by_bot,
-                    duration: appointmentUpdated.product_duration
-                },
-                assigned_professional: {
-                    id: appointmentUpdated.professional_id,
-                    names: appointmentUpdated.professional_names,
-                    last_names: appointmentUpdated.professional_last_names,
-                    document_type: appointmentUpdated.professional_document_type,
-                    document_number: appointmentUpdated.professional_document_number,
-                    email: appointmentUpdated.professional_email,
-                    cell_phone: appointmentUpdated.professional_cellphone,
-                    occupation: appointmentUpdated.professional_occupation,
-                    whatsapp_number: appointmentUpdated.professional_whatsapp
                 },
                 google_calendar_event_id: appointmentUpdated.google_calendar_event_id,
                 google_calendar_event_url: appointmentUpdated.google_calendar_event_url,
@@ -554,24 +439,6 @@ export class AppointmentController {
                     document_number: appointmentUpdated.client_document_number,
                     email: appointmentUpdated.client_email,
                     cellphone: appointmentUpdated.client_cellphone
-                },
-                product: {
-                    id: appointmentUpdated.product_id,
-                    name: appointmentUpdated.product_name,
-                    description: appointmentUpdated.product_description,
-                    scheduled_by_bot: appointmentUpdated.product_scheduled_by_bot,
-                    duration: appointmentUpdated.product_duration
-                },
-                assigned_professional: {
-                    id: appointmentUpdated.professional_id,
-                    names: appointmentUpdated.professional_names,
-                    last_names: appointmentUpdated.professional_last_names,
-                    document_type: appointmentUpdated.professional_document_type,
-                    document_number: appointmentUpdated.professional_document_number,
-                    email: appointmentUpdated.professional_email,
-                    cell_phone: appointmentUpdated.professional_cellphone,
-                    occupation: appointmentUpdated.professional_occupation,
-                    whatsapp_number: appointmentUpdated.professional_whatsapp
                 },
                 google_calendar_event_id: appointmentUpdated.google_calendar_event_id,
                 google_calendar_event_url: appointmentUpdated.google_calendar_event_url,

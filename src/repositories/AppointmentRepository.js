@@ -33,8 +33,6 @@ export class AppointmentRepository {
     static async createAppointment(clientData, clientBD) {
         const values = [
             clientData.client_id,
-            clientData.product_id,
-            clientData.professional_id,
             clientData.start_date_time,
             clientData.end_date_time,
             clientData.google_calendar_event_id,
@@ -51,8 +49,6 @@ export class AppointmentRepository {
         const values = [
             clientData.appointment_id,
             clientData.client_id,
-            clientData.product_id,
-            clientData.professional_id,
             clientData.start_date_time,
             clientData.end_date_time,
             clientData.google_calendar_event_id,

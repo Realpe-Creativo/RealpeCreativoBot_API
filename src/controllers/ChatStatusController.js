@@ -96,6 +96,8 @@ export class ChatStatusController {
 
     static async updateChatStatus(req, res) {
 
+        console.log('Request para actualizar estado_chat como JSON string:', JSON.stringify(req.body, null, 2));
+
         const { error } = ChatStatusSchema.UPDATE_CHAT_STATUS_SCHEMA.validate(req.body);
 
         if (error) {

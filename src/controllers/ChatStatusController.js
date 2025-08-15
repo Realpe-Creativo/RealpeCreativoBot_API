@@ -109,12 +109,16 @@ export class ChatStatusController {
             })
         }
 
+        console.log('VA POR AQUÍ');
+
         try {
             const number = req.params.number;
             // Valida si ya existe el numero con un estado
             const chatStatusFound = await ChatStatusService.getChatStatusByNumber({
                 number: number
             });
+
+            console.log('BUSCA EL ESTADO DEL CHAT' + chatStatusFound, number);
 
             if (chatStatusFound == null) {
                 return res.status(401).json({
@@ -124,6 +128,8 @@ export class ChatStatusController {
                     data: null
                 });
             }
+
+            console.log('VA POR AQUÍ 1');
 
             const chatStatusUpdated = await ChatStatusService.updateStatus({
                 id: chatStatusFound.id,
@@ -139,6 +145,8 @@ export class ChatStatusController {
                 })
             }
 
+            console.log('VA POR AQUÍ 2');
+
             return res.status(201).json({
                 code_response: CodeResponse.CODE_SUCCESS,
                 message: `Chat status updated successfully for the number ${number}.`,
@@ -147,6 +155,8 @@ export class ChatStatusController {
             })
 
         } catch (error) {
+            console.log('ENTRA AL CATCH');
+
             return res.status(400).json({
                 code_response: CodeResponse.CODE_FAILED,
                 error: error.message,

@@ -44,12 +44,18 @@ export class ChatStatusService {
         try {
             await clientBD.query("BEGIN");
 
+            console.log('ESTA EN CHAT STATUS SERVICE ', JSON.stringify(clientData, null, 2));
+
             const chatStatus = await ChatStatusRepository.update({
                 id: clientData.id,
                 estado: clientData.estado
             }, clientBD);
 
+            console.log('SALE DE ACTUALIZAR EN BD', chatStatus);
+
             await clientBD.query("COMMIT");
+
+            console.log('COMMITEA', chatStatus);
 
             // Remove keys unused
             delete chatStatus.creation_date;
@@ -58,6 +64,7 @@ export class ChatStatusService {
             return chatStatus;
         } catch (error) {
             await clientBD.query("ROLLBACK");
+            console.log('ERROR', error);
             throw error;
         } finally {
             clientBD.release();

@@ -31,12 +31,6 @@ export class ClientService {
             // Create cliente
             const cliente = await ClientRepository.create({
                 user_id: usuario.id,
-                guardian_name: clientData.guardian_name,
-                date_of_birth:   dayjs(clientData.date_of_birth, "DD/MM/YYYY").format("YYYY-MM-DD"),
-                neighborhood: clientData.neighborhood,
-                address: clientData.address,
-                sent_by_institution: clientData.sent_by_institution,
-                institution: clientData.institution
             }, clientBD);
 
             // Obtiene usuario-cliente

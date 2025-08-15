@@ -31,9 +31,8 @@ const Queries = Object.freeze({
         RETURNING *
     `,
     CLIENT_CREATE: `
-        INSERT INTO clientes (usuario_id, nombre_acudiente, fecha_nacimiento, barrio, 
-                           direccion, remitido_institucion, institucion_educativa)
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
+        INSERT INTO clientes (usuario_id)
+            VALUES ($1)
         RETURNING *
     `,
     CLIENT_UPDATE: `

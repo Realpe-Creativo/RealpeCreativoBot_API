@@ -15,13 +15,7 @@ export class ClientRepository {
     static async create(clientData, clientBD) {
 
         const values = [
-            clientData.user_id,
-            clientData.guardian_name,
-            clientData.date_of_birth,
-            clientData.neighborhood,
-            clientData.address,
-            clientData.sent_by_institution,
-            clientData.institution
+            clientData.user_id
         ]
         const executor = clientBD || pool;
         const result = await executor.query(Queries.CLIENT_CREATE, values);

@@ -49,36 +49,12 @@ const Queries = Object.freeze({
     `,
     CLIENT_FIND_BY_DOCUMENT: `
         SELECT us.id, us.nombres as names, us.apellidos as last_names, us.tipo_documento as document_type,
-             us.numero_documento as document_number, us.email, us.celular as cellphone_number, 
-             cl.nombre_acudiente as guardian_name, cl.fecha_nacimiento as date_of_birth,
-             cl.barrio as neighborhood, cl.direccion as address, cl.remitido_institucion as sent_by_institution, 
-             cl.institucion_educativa as institution
+             us.numero_documento as document_number, us.email, us.celular as cellphone_number
             FROM usuarios us, clientes cl
             WHERE us.numero_documento = $1
             AND us.activo = true
             AND cl.usuario_id = us.id
-    `,
-    PROFESSIONAL_BY_ID: `
-        SELECT us.id, us.nombres, us.apellidos, us.tipo_documento,
-             us.email, us.celular, pr.cargo, pr.numero_whatsapp,
-             pr.activo
-            FROM usuarios us, profesionales pr
-            WHERE us.id = $1
-            AND pr.usuario_id = us.id
-            AND pr.activo = true;
-    `,
-    PROFESSIONAL_BY_FILTERS: `    
-        SELECT us.id, us.nombres, us.apellidos, us.tipo_documento,
-             us.email, us.celular, pr.cargo, pr.numero_whatsapp,
-             pr.activo
-            FROM usuarios us, profesionales pr
-            WHERE pr.id = $1
-            AND pr.numero_whatsapp = $2
-            AND pr.cargo = $3
-            AND pr.activo = true
-            AND us.id = pr.usuario_id
-            ;
-    `,
+    `, 
     CHAT_STATUS_BY_NUMBER: `
         SELECT ec.id, ec.numero_whatsapp, ec.estado_conversacion
         FROM estado_chat ec

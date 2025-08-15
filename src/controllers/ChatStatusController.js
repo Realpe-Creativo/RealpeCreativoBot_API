@@ -129,12 +129,14 @@ export class ChatStatusController {
                 });
             }
 
-            console.log('VA POR AQUÍ 1');
+            console.log('VA POR AQUÍ 1' + chatStatusFound.id +  ' $ ' + req.body.estado);
 
             const chatStatusUpdated = await ChatStatusService.updateStatus({
                 id: chatStatusFound.id,
                 estado: req.body.estado
             });
+
+            console.log('VALIDA CHAT STATUS', chatStatusUpdated);
 
             if (chatStatusUpdated == null) {
                 return res.status(401).json({

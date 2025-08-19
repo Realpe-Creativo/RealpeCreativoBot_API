@@ -75,28 +75,6 @@ const Queries = Object.freeze({
          WHERE id = $1
         RETURNING *
     `,
-    PRODUCT_ALL: `
-        SELECT
-            producto_id as id,
-            producto_nombre as nombre,
-            descripcion,
-            duracion,
-            agendable_bot as es_agendable_por_bot,
-            profesionales
-        FROM vw_productos_profesionales
-        ORDER BY producto_id DESC
-    `,
-    PRODUCT_BY_ID: `
-        SELECT
-            producto_id as id,
-            producto_nombre as nombre,
-            descripcion,
-            duracion,
-            agendable_bot as es_agendable_por_bot,
-            profesionales
-        FROM vw_productos_profesionales
-        WHERE producto_id = $1
-    `,
     APPOINTMENTS_BY_ID: `
         SELECT * FROM vw_citas_detalle vw
          WHERE vw.appointment_id = $1
@@ -109,24 +87,15 @@ const Queries = Object.freeze({
                uc.nombres as cliente_nombres,
                uc.apellidos as cliente_apellidos,
                uc.numero_documento as cliente_numero_documento,
-               pd.nombre as producto_nombre,
-               up.id as profesional_id,
-               up.nombres as profesional_nombres,
                ec.id as estado_cita_id,
                ec.nombre as estado_cita,
                ci.google_calendar_event_id
         FROM citas ci,
              estado_cita ec,
              clientes cl,
-             productos pd,
-             profesionales pf,
-             usuarios uc,
-             usuarios up
+             usuarios uc
         WHERE cl.id = ci.cliente_id
           AND uc.id = cl.usuario_id
-          AND pd.id = ci.producto_id
-          AND pf.id = ci.profesional_id
-          AND up.id = pf.usuario_id
           AND ec.id = ci.estado_cita_id
           AND ci.fecha_inicial >= TO_TIMESTAMP($1, 'DD/MM/YYYY')
           AND ci.fecha_inicial < TO_TIMESTAMP($2, 'DD/MM/YYYY') + INTERVAL '1 day'

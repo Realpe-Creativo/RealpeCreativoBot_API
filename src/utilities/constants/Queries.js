@@ -106,10 +106,10 @@ const Queries = Object.freeze({
            AND vw.start_date_time < TO_TIMESTAMP($2, 'DD/MM/YYYY') + INTERVAL '1 day'
     `,
     APPOINTMENT_CREATE: `
-        SELECT * FROM fn_insert_appointment($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        SELECT * FROM fn_insert_appointment($1, $2, $3, $4, $5, $6, $7)
     `,
     APPOINTMENT_UPDATE: `
-        SELECT * FROM fn_update_appointment($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        SELECT * FROM fn_update_appointment($1, $2, $3, $4, $5, $6, $7, $8)
     `,
     APPOINTMENT_UPDATE_STATUS: `
         UPDATE citas

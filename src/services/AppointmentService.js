@@ -34,7 +34,7 @@ export class AppointmentService {
 
             await clientBD.query("COMMIT");
 
-            return appointmentCreated;
+            return 'appointmentCreated';
         } catch (e) {
             await clientBD.query("ROLLBACK");
             throw e;

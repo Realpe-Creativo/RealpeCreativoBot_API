@@ -34,7 +34,15 @@ export class AppointmentService {
 
             await clientBD.query("COMMIT");
 
-            return 'appointmentCreated';
+            return {
+                client_id: clientData.client_id,
+                start_date_time: dayjs(clientData.start_date_time, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm"),
+                end_date_time: dayjs(clientData.end_date_time, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm"),
+                google_calendar_event_id: clientData.google_calendar_event_id,
+                google_calendar_url_event: clientData.google_calendar_url_event,
+                current_state_id: clientData.current_state_id,
+                observations: clientData.observations
+            };
         } catch (e) {
             await clientBD.query("ROLLBACK");
             throw e;

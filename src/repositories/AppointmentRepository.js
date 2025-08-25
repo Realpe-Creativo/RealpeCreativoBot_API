@@ -42,6 +42,7 @@ export class AppointmentRepository {
         ]
         const executor = clientBD || pool;
         const result = await executor.query(Queries.APPOINTMENT_CREATE, values);
+        console.log(JSON.stringify(result.rows[0], 2, null));
         return result.rows[0] || null;
     }
 

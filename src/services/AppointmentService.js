@@ -34,7 +34,10 @@ export class AppointmentService {
 
             await clientBD.query("COMMIT");
 
+            console.log(appointmentCreated.appointment_id);
+
             return {
+                appointment_id: appointmentCreated.appointment_id,
                 client_id: clientData.client_id,
                 start_date_time: dayjs(clientData.start_date_time, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm"),
                 end_date_time: dayjs(clientData.end_date_time, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm"),

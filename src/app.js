@@ -70,8 +70,10 @@ app.set('trust proxy', 1);
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: Number.parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
-  max: Number.parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
+  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS ?? 15 * 60 * 1000), // 15 min
+  max: Number(process.env.RATE_LIMIT_MAX_REQUESTS ?? 100),              // máx por ventana
+  standardHeaders: true,   // X-RateLimit-* y Retry-After
+  legacyHeaders: false,    // oculta X-RateLimit-Remaining obsoleto
   message: "Too many requests from this IP, please try again later.",
 });
 app.use(limiter);

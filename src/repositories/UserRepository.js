@@ -4,16 +4,16 @@ import bcrypt from "bcrypt";
 
 export class UserRepository {
 
-    static async existsByDocument(params, clientBD) {
+    static async existsByEmail(params, clientBD) {
         const values = [
-            params.document_number
+            params.email
         ];
         const executor = clientBD || pool;
         const result = await executor.query(Queries.USER_EXISTS, values);
         return result.rows[0].exists;
     }
 
-    static async findByDocument(params) {
+    static async findByEmail(params) {
         const values = [
             params.document_number
         ];
@@ -26,9 +26,6 @@ export class UserRepository {
 
         const values = [
             params.nombres,
-            params.apellidos,
-            params.tipo_documento,
-            params.numero_documento,
             params.email,
             params.celular,
             params.tipo_usuario,

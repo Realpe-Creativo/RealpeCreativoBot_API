@@ -7,7 +7,7 @@ export class ClientService {
 
     static async getClientByDocument(clientData) {
         // const clientBD = await pool.connect();
-        return await UserRepository.findByDocument(clientData);
+        return await UserRepository.findByEmail(clientData);
     }
 
     static async createClient(clientData) {

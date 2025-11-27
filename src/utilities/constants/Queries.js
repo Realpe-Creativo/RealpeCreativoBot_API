@@ -9,12 +9,11 @@ const Queries = Object.freeze({
   USER_EXISTS: `
       SELECT EXISTS (SELECT 1
                      FROM usuarios
-                     WHERE numero_documento = $1) AS exists
+                     WHERE email = $1) AS exists
   `,
   USER_CREATE: `
-      INSERT INTO usuarios (nombres, apellidos, tipo_documento, numero_documento,
-                            email, celular, tipo_usuario, activo)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, nombres, apellidos, tipo_documento, numero_documento, 
+      INSERT INTO usuarios (nombres, email, celular, tipo_usuario, activo)
+      VALUES ($1, $2, $3, $4, $5) RETURNING id, nombres,  
                 email, celular, tipo_usuario, creation_date, update_date, activo
   `,
   USER_UPDATE: `

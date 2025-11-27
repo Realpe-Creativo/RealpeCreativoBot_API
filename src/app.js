@@ -16,6 +16,7 @@ import appointmentsRoutes from "./routes/appointmentsRoutes.js";
 import chatStatusRoutes from "./routes/chatStatusRoutes.js";
 import clientsRoutes from "./routes/clientsRoutes.js";
 import messagesRoutes from "./routes/messagesRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 import {randomUUID} from 'crypto';
 
@@ -67,16 +68,6 @@ app.use(
 );
 
 app.set('trust proxy', 1);
-
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS ?? 15 * 60 * 1000), // 15 min
-  max: Number(process.env.RATE_LIMIT_MAX_REQUESTS ?? 100),              // máx por ventana
-  standardHeaders: true,   // X-RateLimit-* y Retry-After
-  legacyHeaders: false,    // oculta X-RateLimit-Remaining obsoleto
-  message: "Too many requests from this IP, please try again later.",
-});
-app.use(limiter);
 
 // Logging
 if (process.env.NODE_ENV === 'development') {
@@ -133,6 +124,7 @@ app.use("/api/appointments", appointmentsRoutes);
 app.use("/api/chat-status", chatStatusRoutes);
 app.use("/api/clients", clientsRoutes);
 app.use("/api", messagesRoutes);
+app.use("/api/users", userRoutes);
 
 // Error handling middleware
 app.use(notFound);

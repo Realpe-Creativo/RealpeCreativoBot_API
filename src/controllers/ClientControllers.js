@@ -91,7 +91,7 @@ export class ClientController {
         try {
             // Valida si ya existe el usuario en BD
             const userExists = await UserService.existsByDocument({
-                document_number: req.body.document_number
+                email: req.body.email
             });
 
             if (userExists) {

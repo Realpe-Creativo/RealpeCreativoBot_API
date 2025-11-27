@@ -7,7 +7,7 @@ const router = Router();
 router.post("/", UserController.createUser);
 
 // Obtener usuario por número de documento
-router.get("/:email", UserController.getUserByDocument);
+router.get("/:email", UserController.getUserByEmail);
 
 // Actualizar usuario
 router.put("/", UserController.updateUser);

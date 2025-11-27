@@ -13,8 +13,8 @@ const Queries = Object.freeze({
   `,
   USER_CREATE: `
       INSERT INTO usuarios (nombres, email, celular, tipo_usuario, activo)
-      VALUES ($1, $2, $3, $4, $5) RETURNING id, nombres,  
-                email, celular, tipo_usuario, creation_date, update_date, activo
+      VALUES ($1, $2, $3, $4, true) RETURNING id, nombres,  
+                email, celular, tipo_usuario, creation_date, update_date, true
   `,
   USER_UPDATE: `
       UPDATE usuarios
@@ -42,12 +42,10 @@ const Queries = Object.freeze({
   `,
   CLIENT_FIND_BY_DOCUMENT: `
       SELECT us.id,
-             us.nombres as names, us.apellidos as last_names, us.tipo_documento as document_type,
-             us.numero_documento as document_number, us.email, us.celular as cellphone_number
-      FROM usuarios us, clientes cl
-      WHERE us.numero_documento = $1
+             us.nombres, us.email, us.celular, tipo_usuario, activo
+      FROM usuarios us
+      WHERE  us.email = $1
         AND us.activo = true
-        AND cl.usuario_id = us.id
   `,
   CHAT_STATUS_BY_NUMBER: `
       SELECT ec.id, ec.numero_whatsapp, ec.estado_conversacion

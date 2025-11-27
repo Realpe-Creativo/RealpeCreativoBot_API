@@ -35,11 +35,11 @@ export class UserController {
   }
 
   // Buscar usuario por documento
-  static async getUserByDocument(req, res) {
+  static async getUserByEmail(req, res) {
     try {
-      const { document_number } = req.params;
+      const { email } = req.params;
 
-      const user = await UserRepository.findByEmail({ document_number });
+      const user = await UserRepository.findByEmail({ email });
 
       if (!user) {
         return res.status(404).json({

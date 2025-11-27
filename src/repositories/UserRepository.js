@@ -15,7 +15,7 @@ export class UserRepository {
 
     static async findByEmail(params) {
         const values = [
-            params.document_number
+            params.email
         ];
         // const executor = clientBD || pool;
         const result = await pool.query(Queries.CLIENT_FIND_BY_DOCUMENT,values);
@@ -28,8 +28,7 @@ export class UserRepository {
             params.nombres,
             params.email,
             params.celular,
-            params.tipo_usuario,
-            params.activo
+            params.tipo_usuario
         ]
         const executor = clientBD || pool;
         const result = await executor.query(Queries.USER_CREATE, values);
